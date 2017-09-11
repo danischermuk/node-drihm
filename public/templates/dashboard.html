@@ -1,0 +1,17 @@
+<md-content layout-padding>
+	<md-grid-list
+		md-cols-xs="1" md-cols-sm="2" md-cols-md="4" md-cols-gt-md="6"
+		md-row-height-gt-md="1:1" md-row-height="2:2"
+		md-gutter="12px" md-gutter-gt-sm="8px" >
+
+		<md-grid-tile style="background:#b9f6ca;" ng-repeat="appliance in appliances">
+			<p> {{appliance.name}} </p>
+			<div layout-gt-xs="row">
+				<md-switch ng-model="appliance.state" ng-change="appSwitch(appliance)" aria-label="Switch 1"></md-switch>
+			</div>
+		</md-grid-tile>
+
+		
+
+	</md-grid-list>
+</md-content>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en" ng-app="RDash">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>MiCasa</title>
+  <!-- STYLES -->
+  <!-- build:css lib/css/main.min.css -->
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.css">
+  <!-- endbuild -->
+  <!-- SCRIPTS -->
+  <!-- build:js lib/js/main.min.js -->
+  <script type="text/javascript" src="bower_components/angular/angular.js"></script>
+  <script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
+  <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
+  <script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
+  <script type="text/javascript" src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
+  <script type="text/javascript" src="bower_components/angular-socket-io/socket.min.js"></script>
+  <!-- endbuild -->
+  <!-- Custom Scripts -->
+  <script type="text/javascript" src="javascripts/module.js"></script>
+  <script type="text/javascript" src="javascripts/routes.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/alert-ctrl.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/master-ctrl.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/settings-ctrl.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/room-ctrl.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/building-ctrl.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/dash-ctrl.js"></script>
+  <script type="text/javascript" src="javascripts/controllers/schedule-ctrl.js"></script>
+
+</head>
+<body ng-controller="MasterCtrl">
+<section layout="row" layout-fill flex>
+	<md-sidenav
+        class="md-sidenav-left"
+        md-component-id="left"
+        md-is-locked-open="$mdMedia('gt-md')"
+        md-whiteframe="4">
+      <md-toolbar class="material-theme-light material-medium-tall">
+        <h1 class="md-toolbar-tools">DanHome</h1>
+      </md-toolbar>
+	  <md-content>
+		<!-- CONTENIDO DEL SIDENAV -->
+		
+		<md-list flex ng-click="closeLeft()">
+		<!-- Boton del DASHBOARD -->
+			<md-list-item  ng-click="go('index')">
+				<p> {{ dashboard.name }} </p>
+				<md-icon md-svg-icon="{{dashboard.iconUrl}}" ></md-icon>
+			</md-list-item>
+		<!-- Boton del SCHEDULE -->
+			<md-list-item  ng-click="go('schedule')">
+				<p> {{ schedule.name }} </p>
+				<md-icon md-svg-icon="{{schedule.iconUrl}}" ></md-icon>
+			</md-list-item>
+		<!-- BUILDINGS con sus ROOMS -->
+			<md-divider ng-repeat="building in current.buildings">
+			<md-subheader class="md-no-sticky" ng-click="showBuilding(building)">{{building.name}}</md-subheader>
+			<md-list-item ng-repeat="room in building.rooms" ng-click="showRoom(building, room)" >
+				<p> {{ room.name }} </p>
+				<md-icon md-svg-icon="{{room.iconUrl}}" ></md-icon>
+			</md-list-item>
+			</md-divider>
+		<!-- Boton de SETTINGS -->
+			<md-divider></md-divider>
+			<md-list-item ng-click="go('settings')">
+				<p> {{ settings.name }} </p>
+				<md-icon md-svg-icon="{{settings.iconUrl}}" ></md-icon>
+			</md-list-item>
+			
+		</md-list>
+		
+	  </md-content>
+    </md-sidenav>
+    <div layout="column" flex>
+    <!-- TOOLBAR -->
+		<md-toolbar class="material-theme-light material-medium-tall">
+			<div class="md-toolbar-tools">
+				<md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu" hide-gt-md>
+				  <md-icon md-svg-icon="images/menu.svg" ></md-icon>
+				</md-button>
+			<h2>
+			<span>{{toolbar.title}}</span>
+			</h2>
+			<span flex></span>
+			<md-menu  md-position-mode="target-right target">
+			  <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+				<md-icon md-svg-icon="images/avatar.svg" ></md-icon>
+			  </md-button>
+			  <md-menu-content width="2">
+				<md-menu-item ng-repeat="item in userMenu">
+				  <md-button ng-click="go(item.url)"> <span md-menu-align-target></span> {{item.name}} </md-button>
+				</md-menu-item>
+			  </md-menu-content>
+			</md-menu>        
+			</div>
+		</md-toolbar>	
+
+	<md-content flex>      
+			<!-- CONTENIDO -->
+		<div ui-view></div>     
+    </md-content>
+    </div>
+	</section>
+</body>
+</html>
