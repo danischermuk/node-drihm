@@ -246,28 +246,56 @@ connection.on('connect', function(err) {
     + 'FROM dbo.Articulo '
     + 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
     + 'WHERE dbo.Articulo.Regis_Arti '
-    + 'BETWEEN 1400 AND 1500 '
+    + 'BETWEEN 1470 AND 1500 '
     + 'ORDER BY CodInternoArti;',
     function(err, rowCount, rows) {
     if (err) {
         console.log(err);
     } else {
-        console.log(rowCount + ' row(s) returned!');
+      console.log(data);
+      console.log(rowCount + ' row(s) returned!');
     }
+
     });
 
     //Print the rows read
+    var r=0 ,c =0;
     var result = "";
+    var keys = [];
+    var values = [];
+    var line = {};
+    var data = [];
     request.on('row', function(columns) {
+      c=0;
+      line = {};
+      r++;
         columns.forEach(function(column) {
             if (column.value === null) {
                 console.log('NULL');
             } else {
-                result += column.value + " ";
+              line[keys[c]] = column.value;
+              result += column.value + " ";
             }
+            c++;
         });
+        data.push(line);
         console.log(result);
-        result = "";
+        result = "";  
+        
+    });
+
+    
+    request.on('columnMetadata', function (columns) { 
+      columns.forEach(function(column) {
+        if (column.value === null) {
+            console.log('NULL');
+        } else {
+            result += column.colName + " ";
+            keys.push(column.colName);
+        }
+    });
+    console.log(result);
+    result = "";  
     });
 
     // Execute SQL statement
