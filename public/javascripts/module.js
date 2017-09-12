@@ -72,6 +72,8 @@ app.factory('agendaService', ['$http', function($http) {
         return $http.get(urlBase);
     };
 
+    
+
     // buildingService.getBuilding = function (id) {
     //     return $http.get(urlBase + '/' + id);
     // };
@@ -102,3 +104,44 @@ app.factory('agendaService', ['$http', function($http) {
 
     return agendaService;
 }]);
+
+app.factory('sqlService', ['$http', function($http) {
+    
+        var urlBase = '/api/sql';
+        var sqlService = {};
+       
+        sqlService.doQuery = function (cust) {
+            return $http.post(urlBase, cust);
+        };
+
+
+        // buildingService.getBuilding = function (id) {
+        //     return $http.get(urlBase + '/' + id);
+        // };
+    
+        // buildingService.getBuildingsByUser = function (id) {
+        //     return $http.get(urlBase + '/user/' + id);
+        // };
+    
+        // buildingService.insertBuilding = function (cust) {
+        //     return $http.post(urlBase, cust);
+        // };
+    
+        // buildingService.updateBuilding = function (cust) {
+        //     return $http.put(urlBase + '/' + cust.ID, cust)
+        // };
+    
+        // buildingService.deleteBuilding = function (id) {
+        //     return $http.delete(urlBase + '/' + id);
+        // };
+    
+        // buildingService.getBuildingRoom = function (buildingId, roomId) {
+        //     return $http.get(urlBase + '/' + buildingId + '/r/' + roomId);
+        // };
+    
+        // buildingService.insertBuildingRoom = function (id, room) {
+        //     return $http.post(urlBase + '/' + id + '/r', room);
+        // };
+    
+        return sqlService;
+    }]);

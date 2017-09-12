@@ -15,29 +15,24 @@ var io              = require('socket.io')(server);
 
 var debug           = require('debug')('nodeangular:server');
 
-var Connection      = require('tedious').Connection;
-var Request         = require('tedious').Request;
-var TYPES           = require('tedious').TYPES;
-
-
 // Definicion del path
 var application_root = __dirname;
 
 /****************************MODELOS (SCHEMAS)****************************/
-
 
 // Route del index
 var routes          = require('./routes/index');
 
 /****************************CONTROLLERS****************************/
 // Routes de la API
-var api             = require('./controllers/api');
-// Inicialización de la aplicación
-var Init            = require('./controllers/init');
-
+var api               = require('./controllers/api');
+// Controllers para inicialización
+var Init              = require('./controllers/init');
+// Controller del Socket.io
 var emitIO            = require('./controllers/emitIO');
 emitIO.init(io);
-
+// Controllers para la conexion SQL
+var tediousController = require('./controllers/tedious');
 
 /****************************APLICACION****************************/
  // Declaracion de la aplicacion
@@ -65,6 +60,8 @@ app.use('/api', api);
 
 // Inicializamos la aplicación
 Init.initMongoDB();
+
+// Inicializamos la conexión a la base de datos
 
 var agenda      = new Agenda({db: {address: 'localhost:27017/agenda-example'}});
 exports.agenda  = agenda;
@@ -219,95 +216,21 @@ function onListening() {
 
 
 
-// Create connection to database
-var config = {
-  userName: 'sa', // update me
-  password: '1', // update me
-  server: 'SRV-DRIHM',
-  options: {
-      database: 'DRIHM'
-  }
+async function doquery() {
+  let queryResult;
+  queryResult =  await tediousController.sqlQuery('SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti '
+  + 'FROM dbo.Articulo '
+  + 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
+  + 'WHERE dbo.Articulo.Regis_Arti '
+  + 'BETWEEN 1470 AND 1500 '
+  + 'ORDER BY CodInternoArti;'
+  );
+  console.log("queryResult: ");
+  console.log(queryResult);
 }
-var connection = new Connection(config);
 
-// Attempt to connect and execute queries if connection goes through
-connection.on('connect', function(err) {
-  
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('Connected');
-    
-    console.log('Reading rows from the Table...');
-    
-    // Read all rows from table
-    request = new Request(
-      'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti '
-    + 'FROM dbo.Articulo '
-    + 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
-    + 'WHERE dbo.Articulo.Regis_Arti '
-    + 'BETWEEN 1470 AND 1500 '
-    + 'ORDER BY CodInternoArti;',
-    function(err, rowCount, rows) {
-    if (err) {
-        console.log(err);
-    } else {
-      console.log(data);
-      console.log(rowCount + ' row(s) returned!');
-    }
-
-    });
-
-    //Print the rows read
-    var r=0 ,c =0;
-    var result = "";
-    var keys = [];
-    var values = [];
-    var line = {};
-    var data = [];
-    request.on('row', function(columns) {
-      c=0;
-      line = {};
-      r++;
-        columns.forEach(function(column) {
-            if (column.value === null) {
-                console.log('NULL');
-            } else {
-              line[keys[c]] = column.value;
-              result += column.value + " ";
-            }
-            c++;
-        });
-        data.push(line);
-        console.log(result);
-        result = "";  
-        
-    });
-
-    
-    request.on('columnMetadata', function (columns) { 
-      columns.forEach(function(column) {
-        if (column.value === null) {
-            console.log('NULL');
-        } else {
-            result += column.colName + " ";
-            keys.push(column.colName);
-        }
-    });
-    console.log(result);
-    result = "";  
-    });
-
-    // Execute SQL statement
-    connection.execSql(request);
-
-    
-  }
-});
-
-
-
-
+tediousController.init();
+setTimeout(doquery, 1000);
 
 
 module.exports = app;

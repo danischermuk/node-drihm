@@ -4,6 +4,7 @@ var router    		= express.Router();
 // Controllers
 var authController 		= require('./auth'); 
 var userController 		= require('./user');
+var sqlController		= require('./tedious');
 var agendaAPIController = require('./api/agenda');
 
 // Define Routes
@@ -34,6 +35,14 @@ router.route('/user/:user_id/menu')
 
 router.route('/agenda')
 	.get 	(authController.isAuthenticated, agendaAPIController.getJobsAPI);
+
+
+/**********************************************************
+						SQL API
+***********************************************************/
+
+router.route('/sql')
+.post 	(authController.isAuthenticated, sqlController.doQuery);
 
 
 
