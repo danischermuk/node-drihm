@@ -42,7 +42,7 @@ router.route('/agenda')
 ***********************************************************/
 
 router.route('/sql')
-.post 	(authController.isAuthenticated, sqlController.doQuery);
+	.post 	(authController.isAuthenticated, sqlController.doQuery);
 
 
 

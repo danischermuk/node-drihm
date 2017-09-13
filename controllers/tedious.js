@@ -52,8 +52,11 @@ module.exports.sqlQuery = function (query) {
 					if (err) {
 						//Loguear el error, FALTA reportarlo
 						console.log(err);
-					} else
+					} else	{
+						console.log(rowCount + ' rows returned');  
 						return resolve(data);
+					}
+						
 
 				});
 
@@ -66,9 +69,9 @@ module.exports.sqlQuery = function (query) {
 				var line = {};
 				r++;
 				columns.forEach(function (column) {
-					if (column.value === null)
-						line[keys[c]] = "NULL";
-					else
+					// if (column.value === null)
+					// 	line[keys[c]] = "NULL";
+					// else
 						line[keys[c]] = column.value;
 
 					c++;
@@ -78,9 +81,9 @@ module.exports.sqlQuery = function (query) {
 
 			request.on('columnMetadata', function (columns) {
 				columns.forEach(function (column) {
-					if (column.value === null)
-						console.log('NULL');
-					else
+					// if (column.value === null)
+					// 	console.log('NULL');
+					// else
 						keys.push(column.colName);
 				});
 			});

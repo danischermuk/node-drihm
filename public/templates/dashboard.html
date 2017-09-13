@@ -4,13 +4,12 @@
 	<table ng-table="tableParams" class="table" show-filter="true">
 		<tr ng-repeat="articulo in $data">
 			<td title="'Stock'" sortable="'Stock1_StkArti'">
-				{{articulo.Stock1_StkArti}}</td>
+				{{articulo.Stock1_StkArti || 0}}</td>
 			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
 				{{articulo.CodInternoArti}}</td>
 			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
 				{{articulo.DescripcionArti}}</td>
 		</tr>
 	</table>
-
 
 </md-content>

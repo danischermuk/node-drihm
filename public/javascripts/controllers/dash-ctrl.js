@@ -14,9 +14,9 @@ function DashCtrl($state, $scope,  $location, $mdSidenav, $timeout, userService,
 	$scope.doQuery = function () {
 		console.log("hago el SQL Query");
 		var data = {};
-		data.query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti '
+		data.query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, Regis_NivelInt1, Regis_NivelInt2, Regis_NivelInt3, Regis_NivelInt4, Regis_NivelInt5 '
 		+ 'FROM dbo.Articulo '
-		+ 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
+		+ 'LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
 		//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 1470 AND 1500 '
 		+ 'ORDER BY CodInternoArti;';
 		console.log("DATA.QUERY - ");
