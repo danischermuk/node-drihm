@@ -6,7 +6,8 @@
 
 	<title>DRIHM ERP</title>
   <!-- STYLES -->
-  <!-- build:css lib/css/main.min.css -->
+	<!-- build:css lib/css/main.min.css -->
+	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.css">
 		
@@ -35,7 +36,8 @@
   <script type="text/javascript" src="javascripts/routes.js"></script>
   <script type="text/javascript" src="javascripts/controllers/alert-ctrl.js"></script>
   <script type="text/javascript" src="javascripts/controllers/master-ctrl.js"></script>
-  <script type="text/javascript" src="javascripts/controllers/dash-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/dash-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/stock-ctrl.js"></script>
   
 
 </head>
@@ -58,6 +60,11 @@
 			<md-list-item  ng-click="go('index')">
 				<p> {{ dashboard.name }} </p>
 				<md-icon md-svg-icon="{{dashboard.iconUrl}}" ></md-icon>
+			</md-list-item>
+
+			<md-list-item  ng-click="go('stock')">
+				<p> Stock </p>
+				<md-icon md-svg-icon="" ></md-icon>
 			</md-list-item>
 		
 		<!-- Boton de SETTINGS -->

@@ -114,6 +114,9 @@ app.factory('sqlService', ['$http', function($http) {
             return $http.post(urlBase, cust);
         };
 
+        sqlService.queryProductsStock = function () {
+            return $http.get(urlBase + '/products/stock');
+        };
 
         // buildingService.getBuilding = function (id) {
         //     return $http.get(urlBase + '/' + id);

@@ -44,6 +44,9 @@ router.route('/agenda')
 router.route('/sql')
 	.post 	(authController.isAuthenticated, sqlController.doQuery);
 
+router.route('/sql/products/stock')
+	.get 	(authController.isAuthenticated, sqlController.sqlQueryProductsStock);
+
 
 
 module.exports = router;
