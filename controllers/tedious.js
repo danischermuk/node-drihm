@@ -94,9 +94,9 @@ module.exports.sqlQuery = function (query) {
 
 exports.doQuery = async function(req, res) {
 	var query = req.body.query;
-	console.log(query);
+	// console.log(query);
 	var data =  await module.exports.sqlQuery(query);
-	console.log(data);
+	// console.log(data);
 	res.json({ data });
   };
   

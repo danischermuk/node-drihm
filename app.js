@@ -216,21 +216,21 @@ function onListening() {
 
 
 
-async function doquery() {
-  let queryResult;
-  queryResult =  await tediousController.sqlQuery('SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti '
-  + 'FROM dbo.Articulo '
-  + 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
-  + 'WHERE dbo.Articulo.Regis_Arti '
-  + 'BETWEEN 1470 AND 1500 '
-  + 'ORDER BY CodInternoArti;'
-  );
-  console.log("queryResult: ");
-  console.log(queryResult);
-}
+// async function doquery() {
+//   let queryResult;
+//   queryResult =  await tediousController.sqlQuery('SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti '
+//   + 'FROM dbo.Articulo '
+//   + 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
+//   + 'WHERE dbo.Articulo.Regis_Arti '
+//   + 'BETWEEN 1470 AND 1500 '
+//   + 'ORDER BY CodInternoArti;'
+//   );
+//   console.log("queryResult: ");
+//   console.log(queryResult);
+// }
 
 tediousController.init();
-setTimeout(doquery, 1000);
+//setTimeout(doquery, 1000);
 
 
 module.exports = app;

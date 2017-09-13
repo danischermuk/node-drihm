@@ -1,5 +1,16 @@
 <md-content layout-padding>
 	<md-button ng-click="doQuery()">query</md-button>
 
+	<table ng-table="tableParams" class="table" show-filter="true">
+		<tr ng-repeat="articulo in $data">
+			<td title="'Stock'" sortable="'Stock1_StkArti'">
+				{{articulo.Stock1_StkArti}}</td>
+			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
+				{{articulo.CodInternoArti}}</td>
+			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
+				{{articulo.DescripcionArti}}</td>
+		</tr>
+	</table>
+
 
 </md-content>

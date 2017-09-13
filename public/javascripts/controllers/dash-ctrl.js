@@ -1,10 +1,15 @@
 angular.module('RDash')
-.controller('DashCtrl', ['$state', '$scope', '$location','$mdSidenav', '$timeout', 'userService', 'sqlService',  'socket', '$mdDialog', '$stateParams',  DashCtrl]);
+.controller('DashCtrl', ['$state', '$scope', '$location','$mdSidenav', '$timeout', 'userService', 'sqlService',  'socket', '$mdDialog', '$stateParams', 'NgTableParams',  DashCtrl]);
 
 
-function DashCtrl($state, $scope,  $location, $mdSidenav, $timeout, userService, sqlService, socket,  $mdDialog, $stateParams) {
+function DashCtrl($state, $scope,  $location, $mdSidenav, $timeout, userService, sqlService, socket,  $mdDialog, $stateParams, NgTableParams) {
 	console.log("dash ctrl open");
 	
+	var initialParams = {
+        count: 50 // initial page size
+    };
+
+
 	$scope.toolbar.title = "DashBoard";
 	$scope.doQuery = function () {
 		console.log("hago el SQL Query");
@@ -12,18 +17,21 @@ function DashCtrl($state, $scope,  $location, $mdSidenav, $timeout, userService,
 		data.query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti '
 		+ 'FROM dbo.Articulo '
 		+ 'INNER JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
-		+ 'WHERE dbo.Articulo.Regis_Arti '
-		+ 'BETWEEN 1470 AND 1500 '
+		//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 1470 AND 1500 '
 		+ 'ORDER BY CodInternoArti;';
 		console.log("DATA.QUERY - ");
 		console.log(data.query);
 		
 		sqlService.doQuery(data).then(function (response) {
 			console.log(response.data);
+			
+			$scope.tableParams = new NgTableParams(initialParams, { dataset: response.data.data});
 		}, function (error) {
 			console.log(error);
 		});
 	};
+
+	
 
 
 

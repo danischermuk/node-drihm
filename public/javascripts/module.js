@@ -1,4 +1,4 @@
-var app = angular.module('RDash', ['ui.bootstrap', 'ui.router', 'ngMaterial', 'ngMessages', 'btford.socket-io']);
+var app = angular.module('RDash', ['ui.bootstrap', 'ui.router', 'ngMaterial', 'ngMessages', 'btford.socket-io', 'ngTable']);
 
 app.factory('socket', function ($rootScope) {
   var socket = io.connect();
