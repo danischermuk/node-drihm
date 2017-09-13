@@ -63,6 +63,7 @@ module.exports.sqlQuery = function (query) {
 			//Print the rows read
 			var r = 0, c = 0;
 			var keys = [];
+			var keyType = [];
 			var data = [];
 			request.on('row', function (columns) {
 				c = 0;
@@ -72,6 +73,10 @@ module.exports.sqlQuery = function (query) {
 					// if (column.value === null)
 					// 	line[keys[c]] = "NULL";
 					// else
+
+					if((keyType[c] === 'DecimalN' || keyType[c] === 'Int' ) && column.value === null)
+						line[keys[c]] = 0;
+					else
 						line[keys[c]] = column.value;
 
 					c++;
@@ -85,6 +90,8 @@ module.exports.sqlQuery = function (query) {
 					// 	console.log('NULL');
 					// else
 						keys.push(column.colName);
+						keyType.push(column.type.name);
+						console.log (keyType);
 				});
 			});
 
