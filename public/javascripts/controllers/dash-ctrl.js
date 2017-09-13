@@ -14,10 +14,15 @@ function DashCtrl($state, $scope,  $location, $mdSidenav, $timeout, userService,
 	$scope.doQuery = function () {
 		console.log("hago el SQL Query");
 		var data = {};
-		data.query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, Regis_NivelInt1, Regis_NivelInt2, Regis_NivelInt3, Regis_NivelInt4, Regis_NivelInt5 '
+		data.query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 '
 		+ 'FROM dbo.Articulo '
 		+ 'LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
-		//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 1470 AND 1500 '
+		+ 'LEFT JOIN dbo.ArticuloNivelIntegra1 ON dbo.Articulo.Regis_NivelInt1=dbo.ArticuloNivelIntegra1.Regis_NivelInt1 '
+		+ 'LEFT JOIN dbo.ArticuloNivelIntegra2 ON dbo.Articulo.Regis_NivelInt2=dbo.ArticuloNivelIntegra2.Regis_NivelInt2 '
+		+ 'LEFT JOIN dbo.ArticuloNivelIntegra3 ON dbo.Articulo.Regis_NivelInt3=dbo.ArticuloNivelIntegra3.Regis_NivelInt3 '
+		+ 'LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4 '
+		+ 'LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5 '
+		//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 2750 AND 2780 '
 		+ 'ORDER BY CodInternoArti;';
 		console.log("DATA.QUERY - ");
 		console.log(data.query);
@@ -30,9 +35,5 @@ function DashCtrl($state, $scope,  $location, $mdSidenav, $timeout, userService,
 			console.log(error);
 		});
 	};
-
-	
-
-
 
 }
