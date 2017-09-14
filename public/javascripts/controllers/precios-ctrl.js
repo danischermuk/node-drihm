@@ -1,8 +1,8 @@
 angular.module('RDash')
-.controller('StockCtrl', ['$state', '$scope', 'products', '$location','$mdSidenav', '$timeout', 'userService', 'sqlService',  'socket', '$mdDialog', '$stateParams', 'NgTableParams',  StockCtrl]);
+.controller('PreciosCtrl', ['$state', '$scope', 'products', '$location','$mdSidenav', '$timeout', 'userService', 'sqlService',  'socket', '$mdDialog', '$stateParams', 'NgTableParams',  PreciosCtrl]);
 
 
-function StockCtrl($state, $scope, products, $location, $mdSidenav, $timeout, userService, sqlService, socket,  $mdDialog, $stateParams, NgTableParams) {
+function PreciosCtrl($state, $scope, products, $location, $mdSidenav, $timeout, userService, sqlService, socket,  $mdDialog, $stateParams, NgTableParams) {
 	console.log("stock ctrl open");
 	
 	var initialParams = {
@@ -13,9 +13,9 @@ function StockCtrl($state, $scope, products, $location, $mdSidenav, $timeout, us
 	console.log($scope.products);
 	$scope.tableParams = new NgTableParams(initialParams, { dataset: $scope.products});
 
-	$scope.toolbar.title = "Stock";
+	$scope.toolbar.title = "Precios";
 	$scope.doQuery = function () {
-		sqlService.queryProductsStock().then(function (response) {
+		sqlService.queryProductsPrices().then(function (response) {
 			console.log(response.data.data);
 			
 			$scope.products = response.data.data;
@@ -24,5 +24,7 @@ function StockCtrl($state, $scope, products, $location, $mdSidenav, $timeout, us
 			console.log(error);
 		});
 	};
+	
 
 }
+

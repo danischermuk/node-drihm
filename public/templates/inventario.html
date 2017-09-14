@@ -1,32 +1,34 @@
 <md-content layout-padding>
 	<md-button ng-click="doQuery()">query</md-button>
 
+	<md-datepicker ng-model="parametrosBusqueda.desdeFecha" md-current-view="year" md-placeholder="Desde Fecha"></md-datepicker>
+	
+	<md-datepicker ng-model="parametrosBusqueda.hastaFecha" md-current-view="year" md-placeholder="Hasta Fecha"></md-datepicker>
+
+	{{parametrosBusqueda}}
+
+
 	<table ng-table="tableParams" class="table" show-filter="true">
 		<tr ng-repeat="articulo in $data" class="text-center">
-			
+
 			<!-- PARA REFERENCIA -->
 			<td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
-					{{articulo.Regis_Arti}}</td>
+				{{articulo.Regis_Arti}}</td>
 			<!-- HASTA ACÁ -->
 
 			<td title="'Stock'" sortable="'Stock1_StkArti'">
 				{{articulo.Stock1_StkArti}}</td>
 			<td title="'Pendientes'" sortable="'StPedido1_StPendi'">
-					{{articulo.StPedido1_StPendi}}</td>					
+				{{articulo.StPedido1_StPendi}}</td>
 			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
 				{{articulo.CodInternoArti}}</td>
 			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
 				{{articulo.DescripcionArti}}</td>
-			<td title="'Rubro'" filter="{ DescrNivelInt1: 'text'}" sortable="'DescrNivelInt1'">
-				{{articulo.DescrNivelInt1}}</td>
-			<td title="'Categoría'" filter="{ DescrNivelInt2: 'text'}" sortable="'DescrNivelInt2'">
-				{{articulo.DescrNivelInt2}}</td>
-			<td title="'Sub categoría'" filter="{ DescrNivelInt3: 'text'}" sortable="'DescrNivelInt3'">
-				{{articulo.DescrNivelInt3}}</td>
-			<td title="'Marca'" filter="{ DescrNivelInt4: 'text'}" sortable="'DescrNivelInt4'">
-				{{articulo.DescrNivelInt4}}</td>
-			<td title="'Talle'" filter="{ DescrNivelInt5: 'text'}" sortable="'DescrNivelInt5'">
-				{{articulo.DescrNivelInt5}}</td>
+			<td title="'Último Costo'" filter="{ PrCto1Mda1_Arti: 'number'}" sortable="'PrCto1Mda1_Arti'">
+				{{articulo.PrCto1Mda1_Arti | number:2}}</td>
+			<td title="'Fecha Último Costo'" sortable="'FechaCosteo_Arti'">
+				{{articulo.FechaCosteo_Arti | date:'dd/MM/yyyy'}}</td>
+
 		</tr>
 	</table>
 

@@ -32,6 +32,33 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 },
 
                 controller: 'StockCtrl'
+            })
+            .state('precios', {
+                url: '/precios',
+                templateUrl: 'templates/precios.html',
+
+                resolve: {
+                    products: ['sqlService',
+                        function (sqlService) { return sqlService.queryProductsPrices(); }]
+                },
+
+                controller: 'PreciosCtrl'
+            })
+            .state('inventario', {
+                url: '/inventario',
+                templateUrl: 'templates/inventario.html',
+
+                resolve: {
+                    products: ['sqlService',
+                        function (sqlService) { return sqlService.queryProductsPrices(); }]
+                },
+
+                controller: 'InventarioCtrl'
+            })
+            .state('prueba', {
+                url: '/prueba',
+                templateUrl: 'templates/prueba.html',
+                controller: 'PruebaCtrl'
             });
     }
 ]);

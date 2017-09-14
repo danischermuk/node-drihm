@@ -1,0 +1,28 @@
+<md-content layout-padding>
+	<md-button ng-click="doQuery()">query</md-button>
+
+	<table ng-table="tableParams" class="table" show-filter="true" >
+		<tr ng-repeat="articulo in $data" class="text-center">
+			
+			<!-- PARA REFERENCIA -->
+			<td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
+					{{articulo.Regis_Arti}}</td>
+			<!-- HASTA ACÁ -->
+
+			<td title="'Stock'" sortable="'Stock1_StkArti'"  >
+				{{articulo.Stock1_StkArti}}</td>
+			<td title="'Pendientes'" sortable="'StPedido1_StPendi'">
+					{{articulo.StPedido1_StPendi}}</td>					
+			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
+				{{articulo.CodInternoArti}}</td>
+			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
+				{{articulo.DescripcionArti}}</td>
+			<td title="'Último Costo'" filter="{ PrCto1Mda1_Arti: 'number'}" sortable="'PrCto1Mda1_Arti'">
+				{{articulo.PrCto1Mda1_Arti | number:2}}</td>
+			<td title="'Fecha Último Costo'"  sortable="'FechaCosteo_Arti'">
+				{{articulo.FechaCosteo_Arti | date:'MM/dd/yyyy'}}</td>
+
+		</tr>
+	</table>
+
+</md-content>

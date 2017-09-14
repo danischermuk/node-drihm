@@ -101,8 +101,9 @@ module.exports.sqlQuery = function (query) {
 
 };
 
-exports.sqlQueryProductsStock = async function(req, res) {
-	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 '
+exports.sqlQueryProductsInventario = async function(req, res) {
+
+	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi '
 	+ 'FROM dbo.Articulo '
 	+ 'LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
 	+ 'LEFT JOIN dbo.ArticuloNivelIntegra1 ON dbo.Articulo.Regis_NivelInt1=dbo.ArticuloNivelIntegra1.Regis_NivelInt1 '
@@ -110,6 +111,47 @@ exports.sqlQueryProductsStock = async function(req, res) {
 	+ 'LEFT JOIN dbo.ArticuloNivelIntegra3 ON dbo.Articulo.Regis_NivelInt3=dbo.ArticuloNivelIntegra3.Regis_NivelInt3 '
 	+ 'LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4 '
 	+ 'LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5 '
+	+ 'LEFT JOIN dbo.ArticuloStPendiente ON dbo.Articulo.Regis_Arti=dbo.ArticuloStPendiente.Regis_Arti '
+	//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 2750 AND 2780 '
+	+ 'ORDER BY CodInternoArti;';
+
+	// console.log(query);
+	var data =  await module.exports.sqlQuery(query);
+	// console.log(data);
+	res.json({ data });
+  };
+
+
+exports.sqlQueryProductsPrices = async function(req, res) {
+	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi '
+	+ 'FROM dbo.Articulo '
+	+ 'LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra1 ON dbo.Articulo.Regis_NivelInt1=dbo.ArticuloNivelIntegra1.Regis_NivelInt1 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra2 ON dbo.Articulo.Regis_NivelInt2=dbo.ArticuloNivelIntegra2.Regis_NivelInt2 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra3 ON dbo.Articulo.Regis_NivelInt3=dbo.ArticuloNivelIntegra3.Regis_NivelInt3 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5 '
+	+ 'LEFT JOIN dbo.ArticuloStPendiente ON dbo.Articulo.Regis_Arti=dbo.ArticuloStPendiente.Regis_Arti '
+	//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 2750 AND 2780 '
+	+ 'ORDER BY CodInternoArti;';
+
+	// console.log(query);
+	var data =  await module.exports.sqlQuery(query);
+	// console.log(data);
+	res.json({ data });
+  };
+
+
+exports.sqlQueryProductsStock = async function(req, res) {
+	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi '
+	+ 'FROM dbo.Articulo '
+	+ 'LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra1 ON dbo.Articulo.Regis_NivelInt1=dbo.ArticuloNivelIntegra1.Regis_NivelInt1 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra2 ON dbo.Articulo.Regis_NivelInt2=dbo.ArticuloNivelIntegra2.Regis_NivelInt2 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra3 ON dbo.Articulo.Regis_NivelInt3=dbo.ArticuloNivelIntegra3.Regis_NivelInt3 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4 '
+	+ 'LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5 '
+	+ 'LEFT JOIN dbo.ArticuloStPendiente ON dbo.Articulo.Regis_Arti=dbo.ArticuloStPendiente.Regis_Arti '
 	//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 2750 AND 2780 '
 	+ 'ORDER BY CodInternoArti;';
 
@@ -123,7 +165,7 @@ exports.sqlQueryProductsStock = async function(req, res) {
 
 exports.doQuery = async function(req, res) {
 	var query = req.body.query;
-	// console.log(query);
+	console.log(query);
 	var data =  await module.exports.sqlQuery(query);
 	// console.log(data);
 	res.json({ data });

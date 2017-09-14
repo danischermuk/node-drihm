@@ -1,30 +1,40 @@
 var app = angular.module('RDash', ['ui.bootstrap', 'ui.router', 'ngMaterial', 'ngMessages', 'btford.socket-io', 'ngTable']);
 
+angular.module('RDash').config(function ($mdDateLocaleProvider) {
+    $mdDateLocaleProvider.formatDate = function (date) {
+        return date ? moment(date).format('DD-MM-YYYY') : '';
+    };
+
+    $mdDateLocaleProvider.parseDate = function (dateString) {
+        var m = moment(dateString, 'DD-MM-YYYY', true);
+        return m.isValid() ? m.toDate() : new Date(NaN);
+    };
+});
 app.factory('socket', function ($rootScope) {
-  var socket = io.connect();
-  return {
-    on: function (eventName, callback) {
-      socket.on(eventName, function () {  
-        var args = arguments;
-        $rootScope.$apply(function () {
-          callback.apply(socket, args);
-        });
-      });
-    },
-    emit: function (eventName, data, callback) {
-      socket.emit(eventName, data, function () {
-        var args = arguments;
-        $rootScope.$apply(function () {
-          if (callback) {
-            callback.apply(socket, args);
-          }
-        });
-      })
-    }
-  };
+    var socket = io.connect();
+    return {
+        on: function (eventName, callback) {
+            socket.on(eventName, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function (eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                var args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            })
+        }
+    };
 });
 
-app.factory('userService', ['$http', function($http) {
+app.factory('userService', ['$http', function ($http) {
 
     var urlBase = '/api/user';
     var userService = {};
@@ -59,11 +69,11 @@ app.factory('userService', ['$http', function($http) {
     };
 
 
-    
+
     return userService;
 }]);
 
-app.factory('agendaService', ['$http', function($http) {
+app.factory('agendaService', ['$http', function ($http) {
 
     var urlBase = '/api/agenda';
     var agendaService = {};
@@ -72,7 +82,7 @@ app.factory('agendaService', ['$http', function($http) {
         return $http.get(urlBase);
     };
 
-    
+
 
     // buildingService.getBuilding = function (id) {
     //     return $http.get(urlBase + '/' + id);
@@ -105,46 +115,54 @@ app.factory('agendaService', ['$http', function($http) {
     return agendaService;
 }]);
 
-app.factory('sqlService', ['$http', function($http) {
-    
-        var urlBase = '/api/sql';
-        var sqlService = {};
-       
-        sqlService.doQuery = function (cust) {
-            return $http.post(urlBase, cust);
-        };
+app.factory('sqlService', ['$http', function ($http) {
 
-        sqlService.queryProductsStock = function () {
-            return $http.get(urlBase + '/products/stock');
-        };
+    var urlBase = '/api/sql';
+    var sqlService = {};
 
-        // buildingService.getBuilding = function (id) {
-        //     return $http.get(urlBase + '/' + id);
-        // };
+    sqlService.doQuery = function (cust) {
+        return $http.post(urlBase, cust);
+    };
+
+    sqlService.queryProductsStock = function () {
+        return $http.get(urlBase + '/products/stock');
+    };
+
+    sqlService.queryProductsPrices = function () {
+        return $http.get(urlBase + '/products/prices');
+    };
+
+    sqlService.queryProductsInventarioVentas = function (cust) {
+        return $http.post(urlBase + '/products/inventario', cust);
+    };
     
-        // buildingService.getBuildingsByUser = function (id) {
-        //     return $http.get(urlBase + '/user/' + id);
-        // };
-    
-        // buildingService.insertBuilding = function (cust) {
-        //     return $http.post(urlBase, cust);
-        // };
-    
-        // buildingService.updateBuilding = function (cust) {
-        //     return $http.put(urlBase + '/' + cust.ID, cust)
-        // };
-    
-        // buildingService.deleteBuilding = function (id) {
-        //     return $http.delete(urlBase + '/' + id);
-        // };
-    
-        // buildingService.getBuildingRoom = function (buildingId, roomId) {
-        //     return $http.get(urlBase + '/' + buildingId + '/r/' + roomId);
-        // };
-    
-        // buildingService.insertBuildingRoom = function (id, room) {
-        //     return $http.post(urlBase + '/' + id + '/r', room);
-        // };
-    
-        return sqlService;
-    }]);
+    // buildingService.getBuilding = function (id) {
+    //     return $http.get(urlBase + '/' + id);
+    // };
+
+    // buildingService.getBuildingsByUser = function (id) {
+    //     return $http.get(urlBase + '/user/' + id);
+    // };
+
+    // buildingService.insertBuilding = function (cust) {
+    //     return $http.post(urlBase, cust);
+    // };
+
+    // buildingService.updateBuilding = function (cust) {
+    //     return $http.put(urlBase + '/' + cust.ID, cust)
+    // };
+
+    // buildingService.deleteBuilding = function (id) {
+    //     return $http.delete(urlBase + '/' + id);
+    // };
+
+    // buildingService.getBuildingRoom = function (buildingId, roomId) {
+    //     return $http.get(urlBase + '/' + buildingId + '/r/' + roomId);
+    // };
+
+    // buildingService.insertBuildingRoom = function (id, room) {
+    //     return $http.post(urlBase + '/' + id + '/r', room);
+    // };
+
+    return sqlService;
+}]);

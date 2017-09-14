@@ -23,7 +23,8 @@
   <script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
   <script type="text/javascript" src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-socket-io/socket.min.js"></script>
-	
+	<script type="text/javascript" src="bower_components/moment/moment.js"></script>
+
 	<!-- CAMBIAR POR PAQUETES LOCALES -->
 	<link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
 	<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
@@ -38,6 +39,9 @@
   <script type="text/javascript" src="javascripts/controllers/master-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/dash-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/stock-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/precios-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/inventario-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/prueba-ctrl.js"></script>
   
 
 </head>
@@ -64,6 +68,16 @@
 
 			<md-list-item  ng-click="go('stock')">
 				<p> Stock </p>
+				<md-icon md-svg-icon="" ></md-icon>
+			</md-list-item>
+
+			<md-list-item  ng-click="go('precios')">
+				<p> Precios </p>
+				<md-icon md-svg-icon="" ></md-icon>
+			</md-list-item>
+
+			<md-list-item  ng-click="go('inventario')">
+				<p> Inventario </p>
 				<md-icon md-svg-icon="" ></md-icon>
 			</md-list-item>
 		

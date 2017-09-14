@@ -47,6 +47,12 @@ router.route('/sql')
 router.route('/sql/products/stock')
 	.get 	(authController.isAuthenticated, sqlController.sqlQueryProductsStock);
 
+router.route('/sql/products/prices')
+	.get 	(authController.isAuthenticated, sqlController.sqlQueryProductsPrices);
+	
+router.route('/sql/products/inventario')
+	.post 	(authController.isAuthenticated, sqlController.sqlQueryProductsInventario);
+
 
 
 module.exports = router;
