@@ -10,8 +10,9 @@ function InventarioCtrl($state, $scope, products, $location, $mdSidenav, $timeou
     };
 
 	$scope.parametrosBusqueda = {};
-	$scope.parametrosBusqueda.desdeFecha;
-	$scope.parametrosBusqueda.hastaFecha;
+	$scope.desdeFecha;
+	$scope.hastaFecha;
+
 
 	$scope.products = products.data.data;
 	console.log($scope.products);
@@ -19,9 +20,15 @@ function InventarioCtrl($state, $scope, products, $location, $mdSidenav, $timeou
 
 	$scope.toolbar.title = "Inventario";
 	$scope.doQuery = function () {
+		$scope.parametrosBusqueda.desdeFecha="\'" +$scope.desdeFecha.getFullYear()+"-"+
+		($scope.desdeFecha.getMonth()+1)+"-"+
+		$scope.desdeFecha.getDate() +"\'";
+		$scope.parametrosBusqueda.hastaFecha="\'" +$scope.hastaFecha.getFullYear()+"-"+
+		($scope.hastaFecha.getMonth()+1)+"-"+
+		$scope.hastaFecha.getDate()+ "\'";
 		sqlService.queryProductsInventarioVentas($scope.parametrosBusqueda).then(function (response) {
 			console.log(response.data.data);
-			$scope.tableParams = new NgTableParams(initialParams, { dataset: $scope.products});
+			$scope.tableParams = new NgTableParams(initialParams, { dataset: response.data.data});
 		}, function (error) {
 			console.log(error);
 		});

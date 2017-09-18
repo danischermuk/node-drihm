@@ -50,7 +50,7 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
 
                 resolve: {
                     products: ['sqlService',
-                        function (sqlService) { return sqlService.queryProductsPrices(); }]
+                        function (sqlService) { return sqlService.queryProductsInventarioVentas({}); }]
                 },
 
                 controller: 'InventarioCtrl'

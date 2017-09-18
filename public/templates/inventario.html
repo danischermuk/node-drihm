@@ -1,33 +1,34 @@
 <md-content layout-padding>
 	<md-button ng-click="doQuery()">query</md-button>
 
-	<md-datepicker ng-model="parametrosBusqueda.desdeFecha" md-current-view="year" md-placeholder="Desde Fecha"></md-datepicker>
-	
-	<md-datepicker ng-model="parametrosBusqueda.hastaFecha" md-current-view="year" md-placeholder="Hasta Fecha"></md-datepicker>
+	<md-datepicker ng-model="desdeFecha" md-current-view="year" md-placeholder="Desde Fecha" md-open-on-focus></md-datepicker>
 
-	{{parametrosBusqueda}}
-
+	<md-datepicker ng-model="hastaFecha" md-current-view="year" md-placeholder="Hasta Fecha" md-open-on-focus></md-datepicker>
 
 	<table ng-table="tableParams" class="table" show-filter="true">
 		<tr ng-repeat="articulo in $data" class="text-center">
 
 			<!-- PARA REFERENCIA -->
-			<td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
-				{{articulo.Regis_Arti}}</td>
+			<!-- <td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
+				{{articulo.Regis_Arti}}</td> -->
+
 			<!-- HASTA ACÁ -->
 
-			<td title="'Stock'" sortable="'Stock1_StkArti'">
-				{{articulo.Stock1_StkArti}}</td>
-			<td title="'Pendientes'" sortable="'StPedido1_StPendi'">
-				{{articulo.StPedido1_StPendi}}</td>
 			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
 				{{articulo.CodInternoArti}}</td>
 			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
 				{{articulo.DescripcionArti}}</td>
-			<td title="'Último Costo'" filter="{ PrCto1Mda1_Arti: 'number'}" sortable="'PrCto1Mda1_Arti'">
+			<td title="'Ingresos'" sortable="'IngresoStock'">
+				{{articulo.IngresoStock}}</td>
+			<td title="'Egresos'" sortable="'EgresoStock'">
+				{{articulo.EgresoStock}}</td>
+
+			<td title="'Último Costo'" sortable="'PrCto1Mda1_Arti'">
 				{{articulo.PrCto1Mda1_Arti | number:2}}</td>
 			<td title="'Fecha Último Costo'" sortable="'FechaCosteo_Arti'">
-				{{articulo.FechaCosteo_Arti | date:'dd/MM/yyyy'}}</td>
+				{{articulo.FechaCosteo_Arti | date:'dd/MM/yyyy'}}</td>	
+			<td title="'Egreso Valorizado por Costo'" >
+				{{ (articulo.PrCto1Mda1_Arti * articulo.EgresoStock) | number:2}}</td>
 
 		</tr>
 	</table>
