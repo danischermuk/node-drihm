@@ -1,12 +1,16 @@
 <md-content layout-padding>
-	<md-button ng-click="doQuery()">query</md-button>
+	<md-button ng-click="doQuery()">Aplicar Fechas</md-button>
 
 	<md-datepicker ng-model="desdeFecha" md-current-view="year" md-placeholder="Desde Fecha" md-open-on-focus></md-datepicker>
 
 	<md-datepicker ng-model="hastaFecha" md-current-view="year" md-placeholder="Hasta Fecha" md-open-on-focus></md-datepicker>
 
-	<table ng-table="tableParams" class="table" show-filter="true">
-		<tr ng-repeat="articulo in $data" class="text-center">
+	<md-button ng-click="changeCount()">Mostrar Todo</md-button>
+
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>	
+
+	<table ng-table="tableParams" class="table" show-filter="true"  id="datatable">
+		<tr ng-repeat="articulo in $data" class="text-center" ng-click="go ('movimiento-producto', {product_id: articulo.Regis_Arti});">
 
 			<!-- PARA REFERENCIA -->
 			<!-- <td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
@@ -18,19 +22,29 @@
 				{{articulo.CodInternoArti}}</td>
 			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
 				{{articulo.DescripcionArti}}</td>
+			<td title="'Marca'" filter="{ DescrNivelInt4: 'text'}" sortable="'DescrNivelInt4'">
+				{{articulo.DescrNivelInt4}}</td>
 			<td title="'Ingresos'" sortable="'IngresoStock'">
 				{{articulo.IngresoStock}}</td>
 			<td title="'Egresos'" sortable="'EgresoStock'">
 				{{articulo.EgresoStock}}</td>
-
 			<td title="'Último Costo'" sortable="'PrCto1Mda1_Arti'">
 				{{articulo.PrCto1Mda1_Arti | number:2}}</td>
 			<td title="'Fecha Último Costo'" sortable="'FechaCosteo_Arti'">
-				{{articulo.FechaCosteo_Arti | date:'dd/MM/yyyy'}}</td>	
-			<td title="'Egreso Valorizado por Costo'" >
+				{{articulo.FechaCosteo_Arti | date:'dd/MM/yyyy'}}</td>
+			<td title="'Egreso Valorizado por Costo'" sortable="">
 				{{ (articulo.PrCto1Mda1_Arti * articulo.EgresoStock) | number:2}}</td>
 
 		</tr>
+		<tr class="text-center">
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>EGRESO TOTAL VALORIZADO</td>
+			<td>{{sumProduct(tableParams.data, 'PrCto1Mda1_Arti', 'EgresoStock') | number:2 }}</td>
 	</table>
 
 </md-content>

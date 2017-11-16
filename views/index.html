@@ -1,125 +1,146 @@
 <!doctype html>
 <html lang="en" ng-app="RDash">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>DRIHM ERP</title>
-  <!-- STYLES -->
+	<!-- STYLES -->
 	<!-- build:css lib/css/main.min.css -->
 	<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/angular-material/angular-material.css">
-		
+
 	<!-- endbuild -->
-  <!-- SCRIPTS -->
-  <!-- build:js lib/js/main.min.js -->
-  <script type="text/javascript" src="bower_components/angular/angular.js"></script>
-  <script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
-  <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-  <script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
-  <script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
-  <script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
-  <script type="text/javascript" src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
+	<!-- SCRIPTS -->
+	<!-- build:js lib/js/main.min.js -->
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+	<script type="text/javascript" src="bower_components/angular-animate/angular-animate.js"></script>
+	<script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-aria/angular-aria.js"></script>
+	<script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
+	<script type="text/javascript" src="bower_components/socket.io-client/dist/socket.io.min.js"></script>
 	<script type="text/javascript" src="bower_components/angular-socket-io/socket.min.js"></script>
 	<script type="text/javascript" src="bower_components/moment/moment.js"></script>
+	<script type="text/javascript" src="bower_components/ng-table-excel-export/ng-table-excel-export.min.js"></script>
+
 
 	<!-- CAMBIAR POR PAQUETES LOCALES -->
-	<link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+	<link rel="stylesheet" ; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
 	<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
 	<!-- HASTA ACA -->
 
 
 	<!-- endbuild -->
-  <!-- Custom Scripts -->
-  <script type="text/javascript" src="javascripts/module.js"></script>
-  <script type="text/javascript" src="javascripts/routes.js"></script>
-  <script type="text/javascript" src="javascripts/controllers/alert-ctrl.js"></script>
-  <script type="text/javascript" src="javascripts/controllers/master-ctrl.js"></script>
+	<!-- Custom Scripts -->
+	<script type="text/javascript" src="javascripts/module.js"></script>
+	<script type="text/javascript" src="javascripts/routes.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/alert-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/master-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/dash-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/stock-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/precios-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/inventario-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/movimiento-articulo-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/utilidad-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/cotizador-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/clientes-ctrl.js"></script>
+	<script type="text/javascript" src="javascripts/controllers/cliente-ctrl.js"></script>
 	<script type="text/javascript" src="javascripts/controllers/prueba-ctrl.js"></script>
-  
+
 
 </head>
+
 <body ng-controller="MasterCtrl">
-<section layout="row" layout-fill flex>
-	<md-sidenav
-        class="md-sidenav-left"
-        md-component-id="left"
-        md-is-locked-open="$mdMedia('gt-md')"
-        md-whiteframe="4">
-      <md-toolbar class="material-theme-light material-medium-tall">
-					<h1 class="md-toolbar-tools">DRIHM SRL</h1>
-      </md-toolbar>
-	  <md-content>
-		<!-- CONTENIDO DEL SIDENAV -->
-		
-		<md-list flex ng-click="closeLeft()">
-		
-			<!-- Boton del DASHBOARD -->
-			<md-list-item  ng-click="go('index')">
-				<p> {{ dashboard.name }} </p>
-				<md-icon md-svg-icon="{{dashboard.iconUrl}}" ></md-icon>
-			</md-list-item>
+	<section layout="row" layout-fill flex>
+		<md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
+			<md-toolbar class="material-theme-light material-medium-tall">
+				<h1 class="md-toolbar-tools">DRIHM SRL</h1>
+			</md-toolbar>
+			<md-content>
+				<!-- CONTENIDO DEL SIDENAV -->
 
-			<md-list-item  ng-click="go('stock')">
-				<p> Stock </p>
-				<md-icon md-svg-icon="" ></md-icon>
-			</md-list-item>
+				<md-list flex ng-click="closeLeft()">
 
-			<md-list-item  ng-click="go('precios')">
-				<p> Precios </p>
-				<md-icon md-svg-icon="" ></md-icon>
-			</md-list-item>
+					<!-- Boton del DASHBOARD -->
+					<md-list-item ng-click="go('index')">
+						<p> {{ dashboard.name }} </p>
+						<md-icon md-svg-icon="{{dashboard.iconUrl}}"></md-icon>
+					</md-list-item>
 
-			<md-list-item  ng-click="go('inventario')">
-				<p> Inventario </p>
-				<md-icon md-svg-icon="" ></md-icon>
-			</md-list-item>
-		
-		<!-- Boton de SETTINGS -->
-			<md-divider></md-divider>
-			<md-list-item ng-click="go('settings')">
-				<p> {{ settings.name }} </p>
-				<md-icon md-svg-icon="{{settings.iconUrl}}" ></md-icon>
-			</md-list-item>
-		</md-list>
-		
-	  </md-content>
-    </md-sidenav>
-    <div layout="column" flex>
-    <!-- TOOLBAR -->
-		<md-toolbar class="material-theme-light material-medium-tall">
-			<div class="md-toolbar-tools">
-				<md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu" hide-gt-md>
-				  <md-icon md-svg-icon="images/menu.svg" ></md-icon>
-				</md-button>
-			<h2>
-			<span>{{toolbar.title}}</span>
-			</h2>
-			<span flex></span>
-			<md-menu  md-position-mode="target-right target">
-			  <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
-				<md-icon md-svg-icon="images/avatar.svg" ></md-icon>
-			  </md-button>
-			  <md-menu-content width="2">
-				<md-menu-item ng-repeat="item in userMenu">
-				  <md-button ng-click="go(item.url)"> <span md-menu-align-target></span> {{item.name}} </md-button>
-				</md-menu-item>
-			  </md-menu-content>
-			</md-menu>        
-			</div>
-		</md-toolbar>	
+					<md-list-item ng-click="go('stock')">
+						<p> Stock </p>
+						<md-icon md-svg-icon=""></md-icon>
+					</md-list-item>
 
-	<md-content flex>      
-			<!-- CONTENIDO -->
-		<div ui-view></div>     
-    </md-content>
-    </div>
+					<md-list-item ng-click="go('precios')">
+						<p> Precios </p>
+						<md-icon md-svg-icon=""></md-icon>
+					</md-list-item>
+
+					<md-list-item ng-click="go('inventario')">
+						<p> Inventario </p>
+						<md-icon md-svg-icon=""></md-icon>
+					</md-list-item>
+
+					<md-list-item ng-click="go('utilidad')">
+						<p> Utilidad </p>
+						<md-icon md-svg-icon=""></md-icon>
+					</md-list-item>
+
+					<md-list-item ng-click="go('clientes')">
+						<p> Clientes </p>
+						<md-icon md-svg-icon=""></md-icon>
+					</md-list-item>
+
+					<md-list-item ng-click="go('cotizador')">
+						<p> Cotizador </p>
+						<md-icon md-svg-icon=""></md-icon>
+					</md-list-item>
+
+					<!-- Boton de SETTINGS -->
+					<md-divider></md-divider>
+					<md-list-item ng-click="go('settings')">
+						<p> {{ settings.name }} </p>
+						<md-icon md-svg-icon="{{settings.iconUrl}}"></md-icon>
+					</md-list-item>
+				</md-list>
+
+			</md-content>
+		</md-sidenav>
+		<div layout="column" flex>
+			<!-- TOOLBAR -->
+			<md-toolbar class="material-theme-light material-medium-tall">
+				<div class="md-toolbar-tools">
+					<md-button class="md-icon-button" ng-click="toggleLeft()" aria-label="Menu" hide-gt-md>
+						<md-icon md-svg-icon="images/menu.svg"></md-icon>
+					</md-button>
+					<h2>
+						<span>{{toolbar.title}}</span>
+					</h2>
+					<span flex></span>
+					<md-menu md-position-mode="target-right target">
+						<md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+							<md-icon md-svg-icon="images/avatar.svg"></md-icon>
+						</md-button>
+						<md-menu-content width="2">
+							<md-menu-item ng-repeat="item in userMenu">
+								<md-button ng-click="go(item.url)"> <span md-menu-align-target></span> {{item.name}} </md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+				</div>
+			</md-toolbar>
+
+			<md-content flex>
+				<!-- CONTENIDO -->
+				<div ui-view></div>
+			</md-content>
+		</div>
 	</section>
 </body>
+
 </html>

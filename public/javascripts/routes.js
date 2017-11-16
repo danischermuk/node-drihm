@@ -45,7 +45,7 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 controller: 'PreciosCtrl'
             })
             .state('inventario', {
-                url: '/inventario',
+                url: '/movimiento',
                 templateUrl: 'templates/inventario.html',
 
                 resolve: {
@@ -54,6 +54,61 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 },
 
                 controller: 'InventarioCtrl'
+            })
+            .state('movimiento-producto', {
+                url: '/movimiento/:product_id',
+                templateUrl: 'templates/movimiento-articulo.html',
+
+                resolve: {
+                    movimiento: ['$stateParams', 'sqlService',
+                        function ($stateParams, sqlService) { return sqlService.queryProductInventarioVentas($stateParams.product_id, {}); }]
+                },
+
+                controller: 'MovimientoArticuloCtrl'
+            })
+            .state('utilidad', {
+                url: '/utilidad',
+                templateUrl: 'templates/utilidad.html',
+
+                resolve: {
+                    products: ['sqlService',
+                        function (sqlService) { return sqlService.queryProductsUtility(); }]
+                },
+
+                controller: 'UtilidadCtrl'
+            })
+            .state('cotizador', {
+                url: '/cotizador',
+                templateUrl: 'templates/cotizador.html',
+
+                resolve: {
+                    products: ['sqlService',
+                        function (sqlService) { return sqlService.queryProductsUtility(); }]
+                },
+
+                controller: 'CotizadorCtrl'
+            })
+            .state('clientes', {
+                url: '/clientes',
+                templateUrl: 'templates/clientes.html',
+
+                resolve: {
+                    clientes: ['sqlService',
+                        function (sqlService) { return sqlService.queryClientes(); }]
+                },
+
+                controller: 'ClientesCtrl'
+            })
+            .state('cliente', {
+                url: '/cliente/:cliente_id',
+                templateUrl: 'templates/cliente.html',
+
+                resolve: {
+                    cliente: ['$stateParams','sqlService',
+                        function ($stateParams,sqlService) { return sqlService.queryCliente($stateParams.cliente_id); }]
+                },
+
+                controller: 'ClienteCtrl'
             })
             .state('prueba', {
                 url: '/prueba',

@@ -1,0 +1,25 @@
+<md-content layout-padding>
+
+	<md-button ng-click="changeCount()">Mostrar Todo</md-button>
+
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>
+
+
+	<table ng-table="tableParams" class="table" show-filter="true" id="datatable">
+		<tr ng-repeat="cliente in $data" class="text-center" ng-click=" go('cliente', {cliente_id: cliente.Regis_Cli})">
+
+			<td title="'Regis_Cli'" filter="{ Regis_Cli: 'number'}" sortable="'Regis_Cli'">
+				{{cliente.Regis_Cli}}</td>
+			<td title="'Nº Cliente'" filter="{ NumeroCli: 'number'}" sortable="'NumeroCli'">
+				{{cliente.CodigoCli}}</td>
+			<td title="'Razón Social'" filter="{ RazonSocialCli: 'text'}" sortable="'RazonSocialCli'">
+				{{cliente.RazonSocialCli}}</td>
+			<td title="'Fecha ultima Factura'" filter="{ FechaUltimaFacCli: 'text'}" sortable="'FechaUltimaFacCli'">
+				{{cliente.FechaUltimaFacCli | date:'dd/MM/yyyy'}}</td>
+			<td title="'CUIT'" filter="{ CuitCli: 'text'}" sortable="'CuitCli'">
+				{{cliente.CuitCli}}</td>
+			<td title="'Localidad'" filter="{ LocalidadCli: 'text'}" sortable="'LocalidadCli'">
+				{{cliente.LocalidadCli}}</td>
+		</tr>
+	</table>
+</md-content>

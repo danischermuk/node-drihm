@@ -1,0 +1,46 @@
+<md-content layout-padding>
+	
+	<md-button ng-click="changeCount()">Mostrar Todo</md-button>
+	
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>	
+	
+
+	<table ng-table="tableParams" class="table" show-filter="true" id="datatable">
+		<tr ng-repeat="articulo in $data" class="text-center">
+
+			<!-- PARA REFERENCIA
+			<td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
+					{{articulo.Regis_Arti}}</td> -->
+			<!-- HASTA ACÁ -->
+
+			<!-- <td title="'Stock'" sortable="'Stock1_StkArti'">
+				{{articulo.Stock1_StkArti}}</td>
+			<td title="'Pendientes'" sortable="'StPedido1_StPendi'">
+					{{articulo.StPedido1_StPendi}}</td>					 -->
+
+			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
+				{{articulo.CodInternoArti}}</td>
+			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
+				{{articulo.DescripcionArti}}</td>
+			<!-- <td title="'Rubro'" filter="{ DescrNivelInt1: 'text'}" sortable="'DescrNivelInt1'">
+				{{articulo.DescrNivelInt1}}</td>
+			<td title="'Categoría'" filter="{ DescrNivelInt2: 'text'}" sortable="'DescrNivelInt2'">
+				{{articulo.DescrNivelInt2}}</td> -->
+			<td title="'Sub categoría'" filter="{ DescrNivelInt3: 'text'}" sortable="'DescrNivelInt3'">
+				{{articulo.DescrNivelInt3}}</td>
+			<td title="'Marca'" filter="{ DescrNivelInt4: 'text'}" sortable="'DescrNivelInt4'">
+				{{articulo.DescrNivelInt4}}</td>
+			<!-- <td title="'Talle'" filter="{ DescrNivelInt5: 'text'}" sortable="'DescrNivelInt5'">
+				{{articulo.DescrNivelInt5}}</td> -->
+			<td title="'Último Costo'" filter="{ PrCto1Mda1_Arti: 'number'}" sortable="'PrCto1Mda1_Arti'">
+				{{articulo.PrCto1Mda1_Arti | number:2}}</td>
+			<td title="'Fecha Último Costo'" filter="{ FechaCosteo_Arti: 'number'}" sortable="'FechaCosteo_Arti'">
+				{{articulo.FechaCosteo_Arti | date:'dd/MM/yyyy' }}</td>		
+			<td title="'Precio Lista'" filter="{ PrecioLista: 'number'}" sortable="'PrecioLista'">
+				{{articulo.PrecioLista | number:2}}</td>
+			<td title="'Precio Gremio'" filter="{ PrecioGremio: 'number'}" sortable="'PrecioGremio'">
+				{{articulo.PrecioGremio | number:2}}</td>
+		</tr>
+	</table>
+
+</md-content>

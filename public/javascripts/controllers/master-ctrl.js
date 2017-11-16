@@ -8,7 +8,6 @@
 
  function MasterCtrl($scope, $location, $mdSidenav, $timeout, userService, $mdDialog, $state, socket) { 
   console.log("master ctrl open");
-
   socket.emit('event', "eventooooo");
   socket.on('messages', function(data) {  
     console.log(data);
@@ -32,6 +31,12 @@
    console.log(state);
    $state.go( state );
  };
+
+ $scope.go = function ( state, params ) {
+  console.log(state, params);
+  $state.go( state, params );
+};
+
 
 
  

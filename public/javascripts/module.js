@@ -133,9 +133,25 @@ app.factory('sqlService', ['$http', function ($http) {
     };
 
     sqlService.queryProductsInventarioVentas = function (cust) {
-        return $http.post(urlBase + '/products/inventario', cust);
+        return $http.post(urlBase + '/products/movimiento', cust);
+    };
+
+    sqlService.queryProductInventarioVentas = function (id, cust) {
+        return $http.post(urlBase + '/products/movimiento/' + id, cust);
+    };
+
+    sqlService.queryProductsUtility = function () {
+        return $http.get(urlBase + '/products/utility');
+    };
+
+    sqlService.queryClientes = function () {
+        return $http.get(urlBase + '/clientes');
     };
     
+    sqlService.queryCliente = function (id) {
+        return $http.get(urlBase + '/clientes/' + id );
+    };
+
     // buildingService.getBuilding = function (id) {
     //     return $http.get(urlBase + '/' + id);
     // };
@@ -166,3 +182,4 @@ app.factory('sqlService', ['$http', function ($http) {
 
     return sqlService;
 }]);
+
