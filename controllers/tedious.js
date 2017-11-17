@@ -243,6 +243,20 @@ exports.sqlQueryProductsStock = async function (req, res) {
 	res.json({ data });
 };
 
+exports.sqlQueryProductEnCamino = async function (req, res) {
+	var productid = req.params.product_id;
+	
+	var query = 'SELECT OCDet.Cant1_OrdCpDet AS pendiente, OCDet.Regis_Arti, OCDet.FechaEntrega_OrdCpDet AS fehcaEntrega, OCDet.CanRec1_OrdCpDet AS recibido '
+		+ 'FROM dbo.OrdenCompraDet OCDet '
+		+ 'WHERE (OCDet.Regis_arti = ' + productid + ') AND NOT ( OCDet.Cant1_OrdCpDet = OCDet.CanRec1_OrdCpDet) '
+		;
+
+	// console.log(query);
+	var data = await module.exports.sqlQuery(query);
+	// console.log(data);
+	res.json({ data });
+};
+
 exports.sqlQueryProductsUtility = async function (req, res) {
 	var query =  ' SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi  ' 
 		+  '  , pre.PrecioLista, pre.PrecioGremio  ' 

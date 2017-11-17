@@ -47,6 +47,9 @@ router.route('/sql')
 router.route('/sql/products/stock')
 	.get(authController.isAuthenticated, sqlController.sqlQueryProductsStock);
 
+router.route('/sql/products/encamino/:product_id')
+	.get(authController.isAuthenticated, sqlController.sqlQueryProductEnCamino);
+
 router.route('/sql/products/prices')
 	.get(authController.isAuthenticated, sqlController.sqlQueryProductsPrices);
 
@@ -64,5 +67,8 @@ router.route('/sql/clientes/')
 
 router.route('/sql/clientes/:cliente_id')
 	.get(authController.isAuthenticated, sqlController.sqlQueryCliente);
+
+
+
 
 module.exports = router;

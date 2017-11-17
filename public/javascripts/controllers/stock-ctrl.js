@@ -25,4 +25,19 @@ function StockCtrl($state, $scope, products, $location, $mdSidenav, $timeout, us
 		});
 	};
 
+	$scope.openEnCamino = function(articulo, ev) {
+		$mdDialog.show({
+		  controller: EnCaminoDialogCtrl,
+		  templateUrl: 'templates/dialogs/pendientes-dialog.html',
+		  parent: angular.element(document.body),
+		  targetEvent: ev,
+		  clickOutsideToClose:true,
+		  resolve: {
+			encamino: ['sqlService',
+				function (sqlService) { return sqlService.queryProductEnCamino(articulo.Regis_Arti); }]
+		},
+		  fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+		})
+	  };
+
 }

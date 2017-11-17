@@ -12,7 +12,9 @@
 			<td title="'Stock'" sortable="'Stock1_StkArti'">
 				{{articulo.Stock1_StkArti}}</td>
 			<td title="'Pendientes'" sortable="'StPedido1_StPendi'">
-					{{articulo.StPedido1_StPendi}}</td>					
+					{{articulo.StPedido1_StPendi}}</td>
+			<td title="'En camino'" sortable="'pendiente'" ng-click="openEnCamino(articulo, $event)">
+					{{articulo.pendiente}}</td>
 			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
 				{{articulo.CodInternoArti}}</td>
 			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">

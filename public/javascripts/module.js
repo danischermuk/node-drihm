@@ -152,6 +152,10 @@ app.factory('sqlService', ['$http', function ($http) {
         return $http.get(urlBase + '/clientes/' + id );
     };
 
+    sqlService.queryProductEnCamino = function (id) {
+        return $http.get(urlBase + '/products/encamino/' + id );
+    };
+
     // buildingService.getBuilding = function (id) {
     //     return $http.get(urlBase + '/' + id);
     // };
