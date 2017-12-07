@@ -1,0 +1,25 @@
+<md-dialog aria-label="pendientes">
+	<form ng-cloak>
+	  <md-toolbar>
+		<div class="md-toolbar-tools">
+		  <h2>Detalles de ... </h2>
+		</div>
+	  </md-toolbar>
+  
+	  <md-dialog-content>
+			<table ng-table="tableParams" class="table" show-filter="true">
+					<tr ng-repeat="pend in $data" class="text-center">
+						
+						
+						<td title="'En Camino'">
+								{{pend.pendiente}}</td>
+						<td title="'Recibido'">
+							{{pend.recibido}}</td>
+						<td title="'Fecha de Arribo Aproximada'" sortable="'fehcaEntrega'">
+								{{pend.fehcaEntrega | date:'dd/MM/yyyy'}}</td>
+						
+					</tr>
+				</table>
+	  </md-dialog-content>
+	</form>
+  </md-dialog>

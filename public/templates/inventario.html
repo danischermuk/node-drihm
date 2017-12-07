@@ -7,9 +7,9 @@
 
 	<md-button ng-click="changeCount()">Mostrar Todo</md-button>
 
-	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>	
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>
 
-	<table ng-table="tableParams" class="table" show-filter="true"  id="datatable">
+	<table ng-table="tableParams" class="table" show-filter="true" id="datatable">
 		<tr ng-repeat="articulo in $data" class="text-center" ng-click="go ('movimiento-producto', {product_id: articulo.Regis_Arti});">
 
 			<!-- PARA REFERENCIA -->
@@ -18,6 +18,10 @@
 
 			<!-- HASTA ACÁ -->
 
+			<td title="'Stock'" filter="{ Stock: 'number'}" sortable="'stock'">
+				{{articulo.stock}}</td>
+			<td title="'En Camino'" filter="{ pendiente: 'number'}" sortable="'pendiente'">
+				{{articulo.pendiente}}</td>
 			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
 				{{articulo.CodInternoArti}}</td>
 			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">

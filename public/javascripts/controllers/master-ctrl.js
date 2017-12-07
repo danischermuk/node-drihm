@@ -44,9 +44,6 @@
  $scope.users         = {};
  $scope.currentUser   = {};
  $scope.userMenu      = {};
- $scope.currentRoom   = {};
- $scope.buildings = {};
- $scope.currentBuilding   = {};
  $scope.toolbar       = {};
 
  $scope.toolbar.title = "Toolbar";

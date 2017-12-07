@@ -116,7 +116,7 @@ exports.sqlQueryProductInventario = async function (req, res) {
 
 	console.log(dateFilterQuery);
 
-	var query = 'SELECT a.[Regis_arti], ' +
+	var query = 'SELECT a.[Regis_arti],' +
 		'	a.[codinternoarti], ' +
 		'	a.[descripcionarti], ' +
 		'	c.[signostock], ' +
@@ -145,7 +145,8 @@ exports.sqlQueryProductInventario = async function (req, res) {
 		'	   FROM   dbo.[articulomovimientocab] amc ' +
 		'			  LEFT JOIN dbo.[cliente] cli ' +
 		'					 ON (amc.regis_cli = cli.regis_cli ) )  AS amcc ' +
-		'ON(amd.regis_movartic = amcc.regis_movartic);';
+		'ON(amd.regis_movartic = amcc.regis_movartic)' +
+		';';
 
 	console.log(query);
 	var data = await module.exports.sqlQuery(query);
@@ -171,13 +172,17 @@ exports.sqlQueryProductsInventario = async function (req, res) {
 	console.log(dateFilterQuery);
 
 
-	var query = 'SELECT a.[Regis_Arti], MAX(a.[CodInternoArti]) AS CodInternoArti, ' +
+	var query = 
+		'SELECT t.Regis_Arti, t.CodInternoArti, t.DescrNivelInt4, t.DescripcionArti, t.PrCto1Mda1_Arti, t.FechaCosteo_Arti, t.IngresoStock, t.EgresoStock, ast.Stock1_StkArti AS stock , pend.pendiente ' +
+		'FROM(' + 
+		'SELECT a.[Regis_Arti],   MAX(a.[CodInternoArti]) AS CodInternoArti, ' +
 		'MAX(a.DescrNivelInt4) AS DescrNivelInt4, ' +
 		'MAX(a.[DescripcionArti]) AS DescripcionArti, ' +
 		'MAX(a.[PrCto1Mda1_Arti]) AS PrCto1Mda1_Arti, ' +
 		'MAX(a.[FechaCosteo_Arti]) AS FechaCosteo_Arti, ' +
 		'SUM(CASE WHEN c.[SignoStock]  =  \'+\' THEN amd.[Cantidad1_MovArtiD] ELSE 0 END) AS IngresoStock, ' +
 		'SUM(CASE WHEN c.[SignoStock]  =  \'-\' THEN amd.[Cantidad1_MovArtiD] ELSE 0 END) AS EgresoStock ' +
+
 		'FROM dbo.[ArticuloMovimientoCab] amc ' +
 		'LEFT JOIN dbo.[ArticuloMovimientoDet] amd ' +
 		'ON (amd.Regis_MovArtiC = amc.Regis_MovArtiC) ' +
@@ -190,7 +195,16 @@ exports.sqlQueryProductsInventario = async function (req, res) {
 		'ON (dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4)) AS a  ' +
 		'ON (amd.Regis_Arti = a.Regis_Arti) ' +
 		dateFilterQuery +
-		'GROUP BY a.[Regis_Arti];';
+
+		'GROUP BY a.[Regis_Arti]) t ' +
+		'LEFT JOIN dbo.[ArticuloStock] ast ' +
+		'ON (t.Regis_Arti = ast.Regis_Arti) ' +
+		'LEFT JOIN  (SELECT SUM(OCDet.Cant1_OrdCpDet) AS pendiente, OCDet.Regis_Arti ' + 
+		'FROM dbo.OrdenCompraDet OCDet ' + 
+		'WHERE NOT ( OCDet.Cant1_OrdCpDet = OCDet.CanRec1_OrdCpDet) ' + 
+		'GROUP BY (OCDet.Regis_Arti)) pend ' + 
+		'ON (t.Regis_Arti = pend.Regis_Arti) ' +
+		';';
 
 	console.log(query);
 	var data = await module.exports.sqlQuery(query);

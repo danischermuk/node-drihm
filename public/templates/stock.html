@@ -5,9 +5,9 @@
 		<tr ng-repeat="articulo in $data" class="text-center">
 			
 			
-			<td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
-					{{articulo.Regis_Arti}}</td>
-			<!-- HASTA ACÁ -->
+			<!-- <td title="'Regis_Arti'" filter="{ Regis_Arti: 'number'}" sortable="'Regis_Arti'">
+					{{articulo.Regis_Arti}}</td> -->
+
 
 			<td title="'Stock'" sortable="'Stock1_StkArti'">
 				{{articulo.Stock1_StkArti}}</td>
@@ -15,10 +15,10 @@
 					{{articulo.StPedido1_StPendi}}</td>
 			<td title="'En camino'" sortable="'pendiente'" ng-click="openEnCamino(articulo, $event)">
 					{{articulo.pendiente}}</td>
-			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'">
+			<td title="'Codigo'" filter="{ CodInternoArti: 'text'}" sortable="'CodInternoArti'" ng-click="openDetallesArticulo(articulo, $event)">
 				{{articulo.CodInternoArti}}</td>
-			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'">
-				{{articulo.DescripcionArti}}</td>
+			<td title="'Descripcion'" filter="{ DescripcionArti: 'text'}" sortable="'DescripcionArti'" ng-click="openDetallesArticulo(articulo, $event)">
+				{{articulo.DescripcionArti}} </td>
 			<td title="'Rubro'" filter="{ DescrNivelInt1: 'text'}" sortable="'DescrNivelInt1'">
 				{{articulo.DescrNivelInt1}}</td>
 			<td title="'Categoría'" filter="{ DescrNivelInt2: 'text'}" sortable="'DescrNivelInt2'">
