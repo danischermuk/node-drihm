@@ -25,7 +25,8 @@
     "angular": "^1.5.3",
     "angular-messages": "^1.5.7",
     "socket.io-client": "^1.7.1",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "ng-table-bundle": "~3"
   },
   "repository": {
     "type": "git",
