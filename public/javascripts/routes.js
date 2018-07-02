@@ -105,7 +105,9 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
 
                 resolve: {
                     cliente: ['$stateParams','sqlService',
-                        function ($stateParams,sqlService) { return sqlService.queryCliente($stateParams.cliente_id); }]
+                        function ($stateParams,sqlService) { return sqlService.queryCliente($stateParams.cliente_id); }],
+                    transacciones: ['$stateParams','sqlService',
+                        function ($stateParams,sqlService) { return sqlService.queryClienteTransactions($stateParams.cliente_id); }]
                 },
 
                 controller: 'ClienteCtrl'
@@ -114,6 +116,11 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 url: '/prueba',
                 templateUrl: 'templates/prueba.html',
                 controller: 'PruebaCtrl'
+            })
+            .state('pruebaML', {
+                url: '/prueba-ml',
+                templateUrl: 'templates/prueba-ml.html',
+                controller: 'PruebaMLCtrl'
             });
     }
 ]);

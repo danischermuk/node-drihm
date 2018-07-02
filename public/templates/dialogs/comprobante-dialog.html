@@ -1,0 +1,49 @@
+<md-dialog aria-label="pendientes">
+	<form ng-cloak>
+		<md-toolbar>
+			<div class="md-toolbar-tools">
+				<h2>Detalles de {{comprobante.Descripcion}} {{comprobante.NroComprob_CliTra}} </h2>
+			</div>
+		</md-toolbar>
+
+		<md-dialog-content>
+
+			<div>
+				<h4>
+					<b>{{comprobante.RazonSocialCli}}</b> ({{comprobante.codigocli}})</h4>
+				<h5>CUIT: {{comprobante.cuitcli}}</h5>
+				<h5>Fecha: {{comprobante.Fecha_CliTra | date: 'dd/MM/yyyy'}}</h5>
+			</div>
+
+			<h5>Detalle: (sin IVA)</h5>
+			<table ng-table="tableParams" class="table" show-filter="false" id="datatable">
+				<tr ng-repeat="articulo in $data" class="text-center">
+
+					<td title="'Cantidad'" sortable="'Cantidad1_MovArtiD'">
+						{{articulo.Cantidad1_MovArtiD | number:2}}</td>
+					<td title="'Codigo'" sortable="'codinternoarti'">
+						{{articulo.codinternoarti}}</td>
+					<td title="'Precio USD'" sortable="'PrecioMda1_MovArtiD'">
+						{{articulo.PrecioMda1_MovArtiD | number:2}}</td>
+					<td title="'TOTAL USD'" sortable="'PrecioMda1_MovArtiD'">
+						{{articulo.PrecioMda1_MovArtiD * articulo.Cantidad1_MovArtiD | number:2}}</td>
+
+				</tr>
+				<tr class="text-center">
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<b>TOTAL USD:
+							<br>{{sumProduct(tableParams.data, 'PrecioMda1_MovArtiD', 'Cantidad1_MovArtiD') | number:2 }}</b>
+					</td>
+			</table>
+
+
+			<div>
+				<h5>Cotiz. USD: {{comprobante.CotizMda1_CliTra}}</h5>
+				<h5>TOTAL PESOS (con IVA): {{comprobante.NetoPes_CliTra}}</h5>
+			</div>
+		</md-dialog-content>
+	</form>
+</md-dialog>

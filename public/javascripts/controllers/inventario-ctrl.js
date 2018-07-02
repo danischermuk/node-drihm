@@ -38,18 +38,30 @@ function InventarioCtrl($state, $scope, products, $location, $mdSidenav, $timeou
 
 	$scope.sumProduct = function (items, prop1, prop2) {
 		return items.reduce(function (a, b) {
-			return a + (b[prop1] * b[prop2]);
+		  return a + (b[prop1] * b[prop2]);
 		}, 0);
-	};
-
-	$scope.sum = function (items, prop1) {
+	  };
+	
+	  $scope.sum = function (items, prop1) {
 		return items.reduce(function (a, b) {
-			return a + b[prop1];
+		  return a + b[prop1];
 		}, 0);
-	};
+	  };
+	  
+	  $scope.sumPos = function (items, prop1) {
+		return items.reduce(function (a, b) {
+		  return a + (b[prop1] >= 0? b[prop1]:0);
+		}, 0);
+	  };
+	  $scope.sumNeg = function (items, prop1) {
+		return items.reduce(function (a, b) {
+		  return a + (b[prop1] <= 0? (b[prop1]*(-1)):0);
+		}, 0);
+	  };
 
 	$scope.changeCount = function () {
 		$scope.tableParams.count($scope.products.length);
 	};
+
 
 }

@@ -9,26 +9,39 @@
 		<h4>Localidad: {{cliente.LocalidadCli}}</h4>
 	</div>
 
-	<!-- <md-button ng-click="changeCount()">Mostrar Todo</md-button>
+	<md-datepicker ng-model="dateFilterDef.start" md-current-view="year" md-placeholder="Desde Fecha" md-open-on-focus></md-datepicker>
 
-	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a> -->
+	<md-datepicker ng-model="dateFilterDef.end" md-current-view="year" md-placeholder="Hasta Fecha" md-open-on-focus></md-datepicker>
 
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>
 
-	<!-- <table ng-table="tableParams" class="table" show-filter="true" id="datatable">
-		<tr ng-repeat="cliente in $data" class="text-center">
+	<table ng-table="tableParams" class="table" show-filter="true"  id="datatable">
+		<tr ng-repeat="transaccion in $data" class="text-center" ng-click="openDetallesComprobante(transaccion)">
 
-			<td title="'Nº Cliente'" filter="{ NumeroCli: 'number'}" sortable="'NumeroCli'">
-				{{cliente.CodigoCli}}</td>
-			<td title="'Razón Social'" filter="{ RazonSocialCli: 'text'}" sortable="'RazonSocialCli'">
-				{{cliente.RazonSocialCli}}</td>
-			<td title="'Fecha ultima Factura'" filter="{ FechaUltimaFacCli: 'text'}" sortable="'FechaUltimaFacCli'">
-				{{cliente.FechaUltimaFacCli | date:'dd/MM/yyyy'}}</td>
-			<td title="'CUIT'" filter="{ CuitCli: 'text'}" sortable="'CuitCli'">
-				{{cliente.CuitCli}}</td>
-			<td title="'Localidad'" filter="{ LocalidadCli: 'text'}" sortable="'LocalidadCli'">
-				{{cliente.LocalidadCli}}</td>
-				
+			<td title="'# Comprobante'" filter="{ NroComprob_CliTra: 'text'}" sortable="'NroComprob_CliTra'">
+				{{transaccion.NroComprob_CliTra}}</td>
+			<td title="'Fecha'" sortable="'Fecha_CliTra'">
+				{{transaccion.Fecha_CliTra | date:'dd/MM/yyyy'}}</td>
+			<td title="'Concepto'" filter="{ Descripcion: 'text'}" sortable="'Descripcion'">
+				{{transaccion.Descripcion}}</td>
+			<td title="'TOTAL PESOS'" sortable="'NetoPes_CliTra'">
+				{{transaccion.NetoPes_CliTra | number:2}}</td>
+			<td title="'TOTAL USD'" sortable="'NetoMda1_CliTra'">
+				{{transaccion.NetoMda1_CliTra | number:2}}</td>
+			<td title="'Cotiz. USD'" sortable="'CotizMda1_CliTra'">
+				{{transaccion.CotizMda1_CliTra | number:2}}</td>
+			
+			
+
 		</tr>
-	</table> -->
+		<!-- <tr class="text-center">
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>EGRESOS: {{sumNeg(tableParams.data, 'CantMov') | number:2 }}</td>
+			<td>INGRESOS: {{sumPos(tableParams.data, 'CantMov') | number:2 }}</td> -->
+	</table>
 
 </md-content>

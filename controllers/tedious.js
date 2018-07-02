@@ -1,3 +1,4 @@
+var ConnectionPool = require('tedious-connection-pool');
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
@@ -11,6 +12,26 @@ var config = {
 		database: 'DRIHM'
 	}
 }
+//----------- POOL CONFIG -----------------
+var poolConfig = {
+	min: 10,
+	max: 50,
+	idleTimeout: 60000,
+	log: true
+};
+
+var connectionConfig = {
+	userName: 'sa',
+	password: '1',
+	server: 'SRV-DRIHM',
+	options: {
+		database: 'DRIHM'
+	}
+};
+
+var pool;
+
+//----------- POOL CONFIG END--------------
 
 var connection;
 var connectionStatus = "closed";
@@ -29,11 +50,15 @@ var onConnectionError = function (err) {
 };
 
 module.exports.init = function () {
-	connection = new Connection(config);
-	connection.on('connect', onConnectionConnect);
-	connection.on('end', onConnectionEnd);
-	connection.on('error', onConnectionError);
-
+	//connection = new Connection(config);
+	pool = new ConnectionPool(poolConfig, connectionConfig);
+	pool.on('error', function (err) {
+		console.error(err);
+	});
+	connectionStatus = "connected";
+	//connection.on('connect', onConnectionConnect);
+	//connection.on('end', onConnectionEnd);
+	//connection.on('error', onConnectionError);
 };
 
 module.exports.sqlQuery = function (query) {
@@ -46,56 +71,67 @@ module.exports.sqlQuery = function (query) {
 			return reject("Error - DB not connected");
 		}
 		else {
-			request = new Request(
-				query,
-				function (err, rowCount, rows) {
-					if (err) {
-						//Loguear el error, FALTA reportarlo
-						console.log(err);
-					} else {
-						console.log(rowCount + ' rows returned');
-						return resolve(data);
-					}
 
+			pool.acquire(function (err, connection) {
+				if (err) {
+					console.error(err);
+					return;
+				}
 
+				request = new Request(
+					query,
+					function (err, rowCount, rows) {
+						//release the connection back to the pool when finished
+						connection.release();
+						if (err) {
+							//Loguear el error, FALTA reportarlo
+							console.log(err);
+						} else {
+							console.log(rowCount + ' rows returned');
+							return resolve(data);
+						}
+
+						
+					});
+
+				//Print the rows read
+				var r = 0, c = 0;
+				var keys = [];
+				var keyType = [];
+				var data = [];
+				request.on('row', function (columns) {
+					c = 0;
+					var line = {};
+					r++;
+					columns.forEach(function (column) {
+						// if (column.value === null)
+						// 	line[keys[c]] = "NULL";
+						// else
+
+						if ((keyType[c] === 'DecimalN' || keyType[c] === 'Int') && column.value === null)
+							line[keys[c]] = 0;
+						else
+							line[keys[c]] = column.value;
+
+						c++;
+					});
+					data.push(line);
 				});
 
-			//Print the rows read
-			var r = 0, c = 0;
-			var keys = [];
-			var keyType = [];
-			var data = [];
-			request.on('row', function (columns) {
-				c = 0;
-				var line = {};
-				r++;
-				columns.forEach(function (column) {
-					// if (column.value === null)
-					// 	line[keys[c]] = "NULL";
-					// else
-
-					if ((keyType[c] === 'DecimalN' || keyType[c] === 'Int') && column.value === null)
-						line[keys[c]] = 0;
-					else
-						line[keys[c]] = column.value;
-
-					c++;
+				request.on('columnMetadata', function (columns) {
+					columns.forEach(function (column) {
+						// if (column.value === null)
+						// 	console.log('NULL');
+						// else
+						keys.push(column.colName);
+						keyType.push(column.type.name);
+					});
 				});
-				data.push(line);
+
+				// Execute SQL statement
+				connection.execSql(request);
 			});
 
-			request.on('columnMetadata', function (columns) {
-				columns.forEach(function (column) {
-					// if (column.value === null)
-					// 	console.log('NULL');
-					// else
-					keys.push(column.colName);
-					keyType.push(column.type.name);
-				});
-			});
-
-			// Execute SQL statement
-			connection.execSql(request);
 		}
 	})
 
@@ -123,7 +159,7 @@ exports.sqlQueryProductInventario = async function (req, res) {
 		'	amd.[fecha_movartid], ' +
 		'	amd.[cantidad1_movartid], ' +
 		'	amd.[preciomda1_movartid], ' +
-		'	amd.[PrecioMda1_MovArtiD], ' +
+		'	amd.[NroComprob_MovArtiD], ' +
 		'	amcc.[razonsocialcli], ' +
 		'	amd.[cantidad1_movartid], ' +
 		'	c.[descripcion], ' +
@@ -172,9 +208,9 @@ exports.sqlQueryProductsInventario = async function (req, res) {
 	console.log(dateFilterQuery);
 
 
-	var query = 
+	var query =
 		'SELECT t.Regis_Arti, t.CodInternoArti, t.DescrNivelInt4, t.DescripcionArti, t.PrCto1Mda1_Arti, t.FechaCosteo_Arti, t.IngresoStock, t.EgresoStock, ast.Stock1_StkArti AS stock , pend.pendiente ' +
-		'FROM(' + 
+		'FROM(' +
 		'SELECT a.[Regis_Arti],   MAX(a.[CodInternoArti]) AS CodInternoArti, ' +
 		'MAX(a.DescrNivelInt4) AS DescrNivelInt4, ' +
 		'MAX(a.[DescripcionArti]) AS DescripcionArti, ' +
@@ -199,10 +235,10 @@ exports.sqlQueryProductsInventario = async function (req, res) {
 		'GROUP BY a.[Regis_Arti]) t ' +
 		'LEFT JOIN dbo.[ArticuloStock] ast ' +
 		'ON (t.Regis_Arti = ast.Regis_Arti) ' +
-		'LEFT JOIN  (SELECT SUM(OCDet.Cant1_OrdCpDet) AS pendiente, OCDet.Regis_Arti ' + 
-		'FROM dbo.OrdenCompraDet OCDet ' + 
-		'WHERE NOT ( OCDet.Cant1_OrdCpDet = OCDet.CanRec1_OrdCpDet) ' + 
-		'GROUP BY (OCDet.Regis_Arti)) pend ' + 
+		'LEFT JOIN  (SELECT SUM(OCDet.Cant1_OrdCpDet) AS pendiente, OCDet.Regis_Arti ' +
+		'FROM dbo.OrdenCompraDet OCDet ' +
+		'WHERE NOT ( OCDet.Cant1_OrdCpDet = OCDet.CanRec1_OrdCpDet) ' +
+		'GROUP BY (OCDet.Regis_Arti)) pend ' +
 		'ON (t.Regis_Arti = pend.Regis_Arti) ' +
 		';';
 
@@ -234,7 +270,7 @@ exports.sqlQueryProductsPrices = async function (req, res) {
 
 
 exports.sqlQueryProductsStock = async function (req, res) {
-	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi, pend.pendiente '
+	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi, pend.pendiente, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti '
 		+ 'FROM dbo.Articulo '
 		+ 'LEFT JOIN  (SELECT SUM(OCDet.Cant1_OrdCpDet) AS pendiente, OCDet.Regis_Arti '
 		+ 'FROM dbo.OrdenCompraDet OCDet '
@@ -259,7 +295,7 @@ exports.sqlQueryProductsStock = async function (req, res) {
 
 exports.sqlQueryProductEnCamino = async function (req, res) {
 	var productid = req.params.product_id;
-	
+
 	var query = 'SELECT OCDet.Cant1_OrdCpDet AS pendiente, OCDet.Regis_Arti, OCDet.FechaEntrega_OrdCpDet AS fehcaEntrega, OCDet.CanRec1_OrdCpDet AS recibido '
 		+ 'FROM dbo.OrdenCompraDet OCDet '
 		+ 'WHERE (OCDet.Regis_arti = ' + productid + ') AND NOT ( OCDet.Cant1_OrdCpDet = OCDet.CanRec1_OrdCpDet) '
@@ -272,31 +308,31 @@ exports.sqlQueryProductEnCamino = async function (req, res) {
 };
 
 exports.sqlQueryProductsUtility = async function (req, res) {
-	var query =  ' SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi  ' 
-		+  '  , pre.PrecioLista, pre.PrecioGremio  ' 
-		+  ' FROM dbo.Articulo  ' 
-		+  ' LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti  ' 
-		+  ' LEFT JOIN dbo.ArticuloNivelIntegra1 ON dbo.Articulo.Regis_NivelInt1=dbo.ArticuloNivelIntegra1.Regis_NivelInt1  ' 
-		+  ' LEFT JOIN dbo.ArticuloNivelIntegra2 ON dbo.Articulo.Regis_NivelInt2=dbo.ArticuloNivelIntegra2.Regis_NivelInt2  ' 
-		+  ' LEFT JOIN dbo.ArticuloNivelIntegra3 ON dbo.Articulo.Regis_NivelInt3=dbo.ArticuloNivelIntegra3.Regis_NivelInt3  ' 
-		+  ' LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4  ' 
-		+  ' LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5  ' 
-		+  ' LEFT JOIN dbo.ArticuloStPendiente ON dbo.Articulo.Regis_Arti=dbo.ArticuloStPendiente.Regis_Arti  ' 
+	var query = ' SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi  '
+		+ '  , pre.PrecioLista, pre.PrecioGremio  '
+		+ ' FROM dbo.Articulo  '
+		+ ' LEFT JOIN dbo.ArticuloStock ON dbo.Articulo.Regis_arti=dbo.ArticuloStock.Regis_Arti  '
+		+ ' LEFT JOIN dbo.ArticuloNivelIntegra1 ON dbo.Articulo.Regis_NivelInt1=dbo.ArticuloNivelIntegra1.Regis_NivelInt1  '
+		+ ' LEFT JOIN dbo.ArticuloNivelIntegra2 ON dbo.Articulo.Regis_NivelInt2=dbo.ArticuloNivelIntegra2.Regis_NivelInt2  '
+		+ ' LEFT JOIN dbo.ArticuloNivelIntegra3 ON dbo.Articulo.Regis_NivelInt3=dbo.ArticuloNivelIntegra3.Regis_NivelInt3  '
+		+ ' LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4  '
+		+ ' LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5  '
+		+ ' LEFT JOIN dbo.ArticuloStPendiente ON dbo.Articulo.Regis_Arti=dbo.ArticuloStPendiente.Regis_Arti  '
 		//+  ' WHERE dbo.Articulo.Regis_Arti BETWEEN 2750 AND 2780  ' 
-		+  ' LEFT JOIN (SELECT lpl.PrecioLista, lpg.PrecioGremio, a.Regis_Arti  ' 
-		+  ' FROM dbo.Articulo a  ' 
-		+  ' LEFT JOIN (  SELECT apv.PrecioVta1_PreArti AS PrecioGremio, apv.Regis_Arti  ' 
-		+  ' FROM dbo.Articulo a  ' 
-		+  ' LEFT JOIN dbo.ArticuloPrecioVta apv  ' 
-		+  ' ON (a.Regis_Arti = apv.Regis_Arti AND apv.Regis_ListaPrec = 30) ) AS lpg  ' 
-		+  ' ON (a.Regis_Arti = lpg.Regis_Arti)  ' 
-		+  ' LEFT JOIN (  SELECT apv.PrecioVta1_PreArti AS PrecioLista, apv.Regis_Arti  ' 
-		+  ' FROM dbo.Articulo a  ' 
-		+  ' LEFT JOIN dbo.ArticuloPrecioVta apv  ' 
-		+  ' ON (a.Regis_Arti = apv.Regis_Arti AND apv.Regis_ListaPrec = 1) ) AS lpl'
-		+  ' ON (a.Regis_Arti = lpl.Regis_Arti)) AS pre  ' 
-		+  ' ON (pre.Regis_Arti = dbo.Articulo.Regis_Arti)  ' 
-		+  ' ORDER BY CodInternoArti;';
+		+ ' LEFT JOIN (SELECT lpl.PrecioLista, lpg.PrecioGremio, a.Regis_Arti  '
+		+ ' FROM dbo.Articulo a  '
+		+ ' LEFT JOIN (  SELECT apv.PrecioVta1_PreArti AS PrecioGremio, apv.Regis_Arti  '
+		+ ' FROM dbo.Articulo a  '
+		+ ' LEFT JOIN dbo.ArticuloPrecioVta apv  '
+		+ ' ON (a.Regis_Arti = apv.Regis_Arti AND apv.Regis_ListaPrec = 30) ) AS lpg  '
+		+ ' ON (a.Regis_Arti = lpg.Regis_Arti)  '
+		+ ' LEFT JOIN (  SELECT apv.PrecioVta1_PreArti AS PrecioLista, apv.Regis_Arti  '
+		+ ' FROM dbo.Articulo a  '
+		+ ' LEFT JOIN dbo.ArticuloPrecioVta apv  '
+		+ ' ON (a.Regis_Arti = apv.Regis_Arti AND apv.Regis_ListaPrec = 1) ) AS lpl'
+		+ ' ON (a.Regis_Arti = lpl.Regis_Arti)) AS pre  '
+		+ ' ON (pre.Regis_Arti = dbo.Articulo.Regis_Arti)  '
+		+ ' ORDER BY CodInternoArti;';
 
 	// console.log(query);
 	var data = await module.exports.sqlQuery(query);
@@ -305,9 +341,9 @@ exports.sqlQueryProductsUtility = async function (req, res) {
 };
 
 exports.sqlQueryClientes = async function (req, res) {
-	var query =  ' SELECT cli.Regis_Cli, cli.CodigoCli, cli.RazonSocialCli, cli.CalleCli, cli.NumeroCli, cli.DeptoCli, cli.BarrioCli, cli.LocalidadCli, cli.CodigoPostalCli, cli.Telefono1Cli, cli.Telefono2Cli, cli.Telefono3Cli, cli.EmailCli, cli.EmailCli, cli.PaginaWebCli, cli.CuitCli, cli.HorarioCli, cli.FechaUltimaFacCli, cli.CodProveedorCli  ' 
-		+  ' FROM dbo.Cliente cli ' 
-		+  ' ORDER BY RazonSocialCli;';
+	var query = ' SELECT cli.Regis_Cli, cli.CodigoCli, cli.RazonSocialCli, cli.CalleCli, cli.NumeroCli, cli.DeptoCli, cli.BarrioCli, cli.LocalidadCli, cli.CodigoPostalCli, cli.Telefono1Cli, cli.Telefono2Cli, cli.Telefono3Cli, cli.EmailCli, cli.EmailCli, cli.PaginaWebCli, cli.CuitCli, cli.HorarioCli, cli.FechaUltimaFacCli, cli.CodProveedorCli  '
+		+ ' FROM dbo.Cliente cli '
+		+ ' ORDER BY RazonSocialCli;';
 
 	// console.log(query);
 	var data = await module.exports.sqlQuery(query);
@@ -317,16 +353,67 @@ exports.sqlQueryClientes = async function (req, res) {
 
 exports.sqlQueryCliente = async function (req, res) {
 	var cliente = req.params.cliente_id;
-	var query =  ' SELECT cli.Regis_Cli, cli.CodigoCli, cli.RazonSocialCli, cli.CalleCli, cli.NumeroCli, cli.DeptoCli, cli.BarrioCli, cli.LocalidadCli, cli.CodigoPostalCli, cli.Telefono1Cli, cli.Telefono2Cli, cli.Telefono3Cli, cli.EmailCli, cli.EmailCli, cli.PaginaWebCli, cli.CuitCli, cli.HorarioCli, cli.FechaUltimaFacCli, cli.CodProveedorCli  ' 
-		+  ' FROM dbo.Cliente cli ' 
-		+  ' WHERE (cli.Regis_Cli= '+ cliente + ' ) '
-		+  ' ORDER BY RazonSocialCli;';
+	var query = ' SELECT cli.Regis_Cli, cli.CodigoCli, cli.RazonSocialCli, cli.CalleCli, cli.NumeroCli, cli.DeptoCli, cli.BarrioCli, cli.LocalidadCli, cli.CodigoPostalCli, cli.Telefono1Cli, cli.Telefono2Cli, cli.Telefono3Cli, cli.EmailCli, cli.EmailCli, cli.PaginaWebCli, cli.CuitCli, cli.HorarioCli, cli.FechaUltimaFacCli, cli.CodProveedorCli  '
+		+ ' FROM dbo.Cliente cli '
+		+ ' WHERE (cli.Regis_Cli= ' + cliente + ' ) '
+		+ ' ORDER BY RazonSocialCli;';
 
 	// console.log(query);
 	var data = await module.exports.sqlQuery(query);
 	// console.log(data);
 	res.json({ data });
 };
+
+exports.sqlQueryTransaction = async function (req, res) {
+	var transactionNbr = req.params.transaction_id;
+	var data = {};
+
+	var query2 = 'SELECT a.[codinternoarti], amd.[Cantidad1_MovArtiD], amd.[PrecioMda1_MovArtiD] ' +
+	'FROM dbo.[ArticuloMovimientoDet] amd '+
+	'LEFT JOIN dbo.[Articulo] a '+
+	'ON( a.Regis_Arti = amd.Regis_Arti ) '+
+	'WHERE amd.NroComprob_MovArtiD = ' + transactionNbr + ';' ;
+
+	// console.log(query);
+	var items = await module.exports.sqlQuery(query2);
+
+	var query = 'SELECT ct.[Regis_Cli], ct.[Fecha_CliTra], mon.[Descr_Mda], cli.[RazonSocialCli], ct.[NroComprob_CliTra], ct.[CotizMda1_CliTra], ct.[NetoPes_CliTra], ct.[NetoMda1_CliTra], ct.[IVA_CliTra], ct.[IVAPes_CliTra], comp.[Descripcion], cli.[codigocli], cli.[cuitcli]  '+
+	'FROM dbo.[ClienteTransaccion] ct '+
+	'LEFT JOIN dbo.[Cliente] cli  '+
+	'ON (ct.Regis_Cli = cli.Regis_Cli)  '+
+	'LEFT JOIN dbo.[Comprobante] comp  '+
+	'ON (comp.Regis_Com = ct.Regis_Com)  '+
+	'LEFT JOIN dbo.[Moneda] mon  '+
+	'ON (ct.MdaOper_CliTra = (mon.Regis_Mda-1) )  '+
+	'WHERE ct.NroComprob_CliTra  = ' + transactionNbr + ';' ;
+	data = await module.exports.sqlQuery(query);
+
+	data[0].items = items;
+
+
+	// console.log(data);
+	res.json({ data });
+};
+
+exports.sqlQueryClienteTransactions = async function (req, res) {
+	var client_id = req.params.cliente_id;
+	var query = 'SELECT ct.[Regis_Cli], ct.[Fecha_CliTra], mon.[Descr_Mda], cli.[RazonSocialCli], ct.[NroComprob_CliTra], ct.[CotizMda1_CliTra], ct.[NetoPes_CliTra], ct.[NetoMda1_CliTra], ct.[IVA_CliTra], ct.[IVAPes_CliTra], comp.[Descripcion] '+
+	'FROM dbo.[ClienteTransaccion] ct  '+
+	'LEFT JOIN dbo.[Cliente] cli  '+
+	'ON (ct.Regis_Cli = cli.Regis_Cli)  '+
+	'LEFT JOIN dbo.[Comprobante] comp  '+
+	'ON (comp.Regis_Com = ct.Regis_Com)  '+
+	'LEFT JOIN dbo.[Moneda] mon  '+
+	'ON (ct.MdaOper_CliTra = (mon.Regis_Mda-1) )  '+
+	'WHERE ct.Regis_Cli  = ' + client_id + ';' ;
+	var data = await module.exports.sqlQuery(query);
+
+
+
+	// console.log(data);
+	res.json({ data });
+};
+
 
 exports.doQuery = async function (req, res) {
 	var query = req.body.query;

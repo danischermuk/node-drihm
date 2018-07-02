@@ -72,5 +72,4 @@ function PruebaCtrl($state, $scope, $location, $mdSidenav, $timeout, userService
         divContainer.appendChild(table);
     }
 
-
 }

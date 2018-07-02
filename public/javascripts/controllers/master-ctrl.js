@@ -90,8 +90,6 @@
     "iconUrl":  "/images/dash.svg",             
     };
 
-
-
   
 $scope.settings = { "name":   "Settings",
 "url":    "/settings",

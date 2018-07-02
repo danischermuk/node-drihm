@@ -1,13 +1,10 @@
 <md-content layout-padding>
-	<md-button ng-click="doQuery()">Aplicar Fechas</md-button>
+	
+	<md-datepicker ng-model="dateFilterDef.start" md-current-view="year" md-placeholder="Desde Fecha" md-open-on-focus></md-datepicker>
 
-	<md-datepicker ng-model="desdeFecha" md-current-view="year" md-placeholder="Desde Fecha" md-open-on-focus></md-datepicker>
+	<md-datepicker ng-model="dateFilterDef.end" md-current-view="year" md-placeholder="Hasta Fecha" md-open-on-focus></md-datepicker>
 
-	<md-datepicker ng-model="hastaFecha" md-current-view="year" md-placeholder="Hasta Fecha" md-open-on-focus></md-datepicker>
-
-	<md-button ng-click="changeCount()">Mostrar Todo</md-button>
-
-	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>	
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>
 
 	<table ng-table="tableParams" class="table" show-filter="true"  id="datatable">
 		<tr ng-repeat="articulo in $data" class="text-center">
@@ -25,7 +22,7 @@
 			<td title="'Concepto'" filter="{ descripcion: 'text'}" sortable="'descripcion'">
 				{{articulo.descripcion}}</td>
 			<td title="'Precio USD'" sortable="'PrecioMda1_MovArtiD'">
-				{{articulo.PrecioMda1_MovArtiD | number:2}}</td>
+				{{articulo.preciomda1_movartid | number:2}}</td>
 			<td title="'Fecha'" sortable="'fecha_movartid'">
 				{{articulo.fecha_movartid | date:'dd/MM/yyyy'}}</td>
 			

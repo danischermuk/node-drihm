@@ -68,7 +68,12 @@ router.route('/sql/clientes/')
 router.route('/sql/clientes/:cliente_id')
 	.get(authController.isAuthenticated, sqlController.sqlQueryCliente);
 
+router.route('/sql/cliente/transactions/:cliente_id')
+	.get(authController.isAuthenticated, sqlController.sqlQueryClienteTransactions);
 
+router.route('/sql/comprobante/:transaction_id')
+	.get(authController.isAuthenticated, sqlController.sqlQueryTransaction);
 
+	
 
 module.exports = router;

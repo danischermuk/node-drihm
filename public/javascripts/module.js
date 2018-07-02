@@ -156,33 +156,16 @@ app.factory('sqlService', ['$http', function ($http) {
         return $http.get(urlBase + '/products/encamino/' + id );
     };
 
-    // buildingService.getBuilding = function (id) {
-    //     return $http.get(urlBase + '/' + id);
-    // };
+    sqlService.queryTransaction = function (id) {
+        return $http.get(urlBase + '/comprobante/' + id );
+    };
 
-    // buildingService.getBuildingsByUser = function (id) {
-    //     return $http.get(urlBase + '/user/' + id);
-    // };
+    sqlService.queryClienteTransactions = function (id) {
+        return $http.get(urlBase + '/cliente/transactions/' + id );
+    };
 
-    // buildingService.insertBuilding = function (cust) {
-    //     return $http.post(urlBase, cust);
-    // };
 
-    // buildingService.updateBuilding = function (cust) {
-    //     return $http.put(urlBase + '/' + cust.ID, cust)
-    // };
 
-    // buildingService.deleteBuilding = function (id) {
-    //     return $http.delete(urlBase + '/' + id);
-    // };
-
-    // buildingService.getBuildingRoom = function (buildingId, roomId) {
-    //     return $http.get(urlBase + '/' + buildingId + '/r/' + roomId);
-    // };
-
-    // buildingService.insertBuildingRoom = function (id, room) {
-    //     return $http.post(urlBase + '/' + id + '/r', room);
-    // };
 
     return sqlService;
 }]);

@@ -50,7 +50,27 @@ function StockCtrl($state, $scope, products, $location, $mdSidenav, $timeout, us
 			clickOutsideToClose: true,
 			resolve: {
 				encamino: ['sqlService',
-					function (sqlService) { return sqlService.queryProductEnCamino(articulo.Regis_Arti); }]
+					function (sqlService) { return sqlService.queryProductEnCamino(articulo.Regis_Arti); }],
+				movimiento: ['sqlService',
+					function (sqlService) { return sqlService.queryProductInventarioVentas(articulo.Regis_Arti,{}); }],
+				detalle: [
+					function() {
+						var detalle={}; 
+						detalle.codInterno 	= articulo.CodInternoArti;
+						detalle.descripcion = articulo.DescripcionArti;
+						detalle.nivel1 		= articulo.DescrNivelInt1;
+						detalle.nivel2 		= articulo.DescrNivelInt2;
+						detalle.nivel3 		= articulo.DescrNivelInt3;
+						detalle.nivel4 		= articulo.DescrNivelInt4;
+						detalle.nivel5 		= articulo.DescrNivelInt5;
+						detalle.costo 		= articulo.PrCto1Mda1_Arti; 
+						detalle.fecha		= articulo.FechaCosteo_Arti;
+						detalle.Regis_Arti 	= articulo.Regis_Arti;
+						detalle.pendientes	= articulo.StPedido1_StPendi;
+						detalle.stock 		= articulo.Stock1_StkArti;
+						detalle.encamino	= articulo.pendiente;
+						console.log(detalle); 
+						return detalle;}]
 			},
 			fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
 		})
