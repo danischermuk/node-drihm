@@ -1,58 +1,62 @@
 /****************************DEPENDENCIAS Y MODULOS****************************/
-var express         = require('express');
-var app             = express();
-var path            = require('path');
-var favicon         = require('serve-favicon');
-var logger          = require('morgan');
-var cookieParser    = require('cookie-parser');
-var bodyParser      = require('body-parser');
-var methodOverride  = require("method-override");
-var mongoose        = require('mongoose');
-var Agenda          = require('agenda');
-var passport        = require('passport');
-var server          = require('http').Server(app);
-var io              = require('socket.io')(server);
-
-var debug           = require('debug')('nodeangular:server');
+var express = require('express');
+var app = express();
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var methodOverride = require("method-override");
+var mongoose = require('mongoose');
+var Agenda = require('agenda');
+var passport = require('passport');
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var meli = require('mercadolibre');
+var debug = require('debug')('nodeangular:server');
 
 // Definicion del path
 var application_root = __dirname;
 
 /****************************MODELOS (SCHEMAS)****************************/
+require('./models/user');
+require('./models/infonecta_import');
 
 // Route del index
-var routes          = require('./routes/index');
+var routes = require('./routes/index');
+
+
 
 /****************************CONTROLLERS****************************/
 // Routes de la API
-var api               = require('./controllers/api');
+var api = require('./controllers/api');
 // Controllers para inicialización
-var Init              = require('./controllers/init');
+var Init = require('./controllers/init');
 // Controller del Socket.io
-var emitIO            = require('./controllers/emitIO');
+var emitIO = require('./controllers/emitIO');
 emitIO.init(io);
 // Controllers para la conexion SQL
 var tediousController = require('./controllers/tedious');
 
 /****************************APLICACION****************************/
- // Declaracion de la aplicacion
+// Declaracion de la aplicacion
 app.disable('x-powered-by');
- // Use the passport package in our application
+// Use the passport package in our application
 app.use(passport.initialize());
 // view engine setup
-app.set     ('views', path.join(__dirname, 'views'));
-app.engine  ("html", require("ejs").renderFile);
-app.set     ('view engine', 'html');
- 
+app.set('views', path.join(__dirname, 'views'));
+app.engine("html", require("ejs").renderFile);
+app.set('view engine', 'html');
+
 app.use(favicon('public/images/favicon.ico'));
 app.use(logger('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // Direccion de los paquetes de BOWER
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
 // Direccion de las Routes
 app.use('/', routes);
@@ -63,86 +67,93 @@ Init.initMongoDB();
 
 // Inicializamos la conexión a la base de datos
 
-var agenda      = new Agenda({db: {address: 'localhost:27017/agenda-example'}});
-exports.agenda  = agenda;
+var agenda = new Agenda({ db: { address: 'localhost:27017/agenda-example' } });
+exports.agenda = agenda;
 
-agenda.define('greet the world1', function(job, done) {
-	job.attrs.data.num = job.attrs.data.num+1;
+agenda.define('greet the world1', function (job, done) {
+  job.attrs.data.num = job.attrs.data.num + 1;
   console.log(job.attrs.data.num, 'hello world!');
   done();
 });
 
 
-agenda.define('view jobs', function(job, done) {
+agenda.define('view jobs', function (job, done) {
   console.log("JOBS DE AGENDA");
-	agenda.jobs({}, function(err, jobs) {
-	  console.log(jobs);
-	});
-	done();
-});
-
-agenda.on('ready', function() {
-	agenda.cancel({}, function(err, numRemoved) {
-    console.log(numRemoved + " Removed from Agenda");
-  });
- 	// agenda.every('10 seconds', 'greet the world1', {num: 0});
-
-  
-
-  var when = new Date(2017, 2, 23, 11, 52, 30, 0);
-  
-  agenda.start();
-  
-  agenda.jobs({}, function(err, jobs) {
+  agenda.jobs({}, function (err, jobs) {
     console.log(jobs);
   });
-	
+  done();
+});
+
+agenda.on('ready', function () {
+  agenda.cancel({}, function (err, numRemoved) {
+    console.log(numRemoved + " Removed from Agenda");
+  });
+  // agenda.every('10 seconds', 'greet the world1', {num: 0});
+
+
+
+  var when = new Date(2017, 2, 23, 11, 52, 30, 0);
+
+  agenda.start();
+
+  agenda.jobs({}, function (err, jobs) {
+    console.log(jobs);
+  });
+
 });
 
 /// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
- 
+
 /// error handlers
- 
+
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
- 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
-        message: err.message,
-        error: {}
+      message: err.message,
+      error: err
     });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
 });
- 
 
 
+var meliObject = new meli.Meli('47531210', 'ydc8SFtsztdEQIZZpfjQtW3Ln7DPdDOZ');
 
+meliObject.getAuthURL('https://www.google.com');
 
+var meliCallback = function (error, response) {
+  console.log('error ' + error);
+  console.log('response ' + JSON.stringify(response));
+};
+
+meliObject.refreshAccessToken(meliCallback);
 
 var port = normalizePort(process.env.PORT || '3333');
 app.set('port', port);
 
 
-io.on('connection', function(client){
+io.on('connection', function (client) {
   console.log("io connection");
-  client.on('event', function(data){console.log("io EVENT" + data);client.emit('messages', 'mensaje del socket');});
-  client.on('disconnect', function(){console.log("io DISconnection");});
+  client.on('event', function (data) { console.log("io EVENT" + data); client.emit('messages', 'mensaje del socket'); });
+  client.on('disconnect', function () { console.log("io DISconnection"); });
 
 });
 

@@ -1,8 +1,14 @@
 <md-content layout-padding>
-	<md-button ng-click="doQuery()">query</md-button>
+	<!-- <md-button ng-click="doQuery()">query</md-button>
 
 	<md-input-container class="md-block">
 		<textarea ng-model="query.query" rows="1" md-select-on-focus></textarea>
 	</md-input-container>
-		{{seller}}
+		{{seller}} -->
+
+		<md-button ng-click="doPDF()">PDF</md-button>
+		<a ng-href="{{pdf}}">
+			Open PDF
+		  </a>
+
 </md-content>

@@ -6,6 +6,8 @@ var authController = require('./auth');
 var userController = require('./user');
 var sqlController = require('./tedious');
 var agendaAPIController = require('./api/agenda');
+var pdfController = require('./pdf');
+var xlsController = require('./xlsimport');
 
 // Define Routes
 
@@ -18,8 +20,7 @@ router.route('/user')
 	.post(authController.isAuthenticated, userController.postUser);
 
 router.route('/user/me')
-	.get(authController.isAuthenticated, userController.getReqUser);
-
+	.get(authController.isAuthenticated, authController.requireRole(["admin", "user"]), userController.getReqUser);
 
 router.route('/user/:user_id')
 	.get(authController.isAuthenticated, userController.getUser)
@@ -74,6 +75,17 @@ router.route('/sql/cliente/transactions/:cliente_id')
 router.route('/sql/comprobante/:transaction_id')
 	.get(authController.isAuthenticated, sqlController.sqlQueryTransaction);
 
-	
+
+/**********************************************************
+						PDF API
+***********************************************************/	
+router.route('/pdf/')
+	.get(pdfController.pdfMakePDF);
+
+/**********************************************************
+						IMPORT API
+***********************************************************/	
+router.route('/xls/')
+	.post(xlsController.xlsimportFile);
 
 module.exports = router;

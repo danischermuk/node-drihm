@@ -1,0 +1,20 @@
+<md-content layout-padding>
+
+	<!-- USUARIOS -->
+
+	<table ng-table="tableParams" class="table" show-filter="true" id="datatable">
+		<tr ng-repeat="usuario in $data" class="text-center"   ng-click="openUsuario(usuario, $event)">
+
+			<td title="'Nombre'" sortable="'name'">
+				{{usuario.name}}</td>
+			<td title="'username'" sortable="'username'">
+				{{usuario.username}}</td>
+			<td title="'Permisos'" sortable="'role'">
+				{{usuario.role}}</td>
+			<td title="'e-mail'" sortable="'email'">
+				{{usuario.email}}</td>	
+			<td title="'ID'" sortable="'_id'">
+				{{usuario._id}}</td>
+		</tr>
+	</table> 
+</md-content>

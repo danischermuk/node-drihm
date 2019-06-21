@@ -6,8 +6,9 @@ var userSchema = new Schema({
   name: String,
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  role: String,
   email: String,
-  admin: Boolean
+  role: String
 });
 
 // Execute before each user.save() call

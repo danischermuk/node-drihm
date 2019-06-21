@@ -112,6 +112,17 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
 
                 controller: 'ClienteCtrl'
             })
+            .state('usuarios', {
+                url: '/usuarios/',
+                templateUrl: 'templates/usuarios.html',
+
+                resolve: {
+                    usuarios: ['userService',
+                        function (userService) { return userService.getUsers();}]
+                },
+
+                controller: 'UsuariosCtrl'
+            })
             .state('prueba', {
                 url: '/prueba',
                 templateUrl: 'templates/prueba.html',

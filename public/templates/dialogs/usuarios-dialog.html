@@ -1,0 +1,40 @@
+<md-dialog aria-label="pendientes">
+	<form ng-cloak>
+	  <md-toolbar>
+		<div class="md-toolbar-tools">
+		  <h2>{{usuario.name}} </h2>
+		</div>
+		</md-toolbar>
+		<md-input-container>
+			<label>Nombre</label>
+			<input ng-model="usuario.name">
+		</md-input-container>
+
+		<md-input-container required>
+			<label>Usuario</label>
+			<input ng-model="usuario.username">
+		</md-input-container>
+		
+		<md-input-container>
+			<label>Password</label>
+			<input ng-model="usuario.newpassword">
+		</md-input-container>
+		
+		<md-input-container>
+			<label>E-Mail</label>
+			<input ng-model="usuario.email">
+		</md-input-container>
+
+		<md-input-container>
+			<label>Permisos</label>
+			<md-select name="type" ng-model="usuario.role" required>
+				<md-option value="admin">Administrador</md-option>
+				<md-option value="user">Usuario</md-option>
+			</md-select>
+		</md-input-container>
+
+		<md-button class="md-raised">SAVE</md-button>
+		<md-button class="md-raised md-warn">CANCEL</md-button>
+
+	</form>
+  </md-dialog>

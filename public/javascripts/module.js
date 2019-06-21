@@ -170,3 +170,27 @@ app.factory('sqlService', ['$http', function ($http) {
     return sqlService;
 }]);
 
+app.factory('pdfService', ['$http', function ($http) {
+
+    var urlBase = '/api/pdf';
+    var pdfService = {};
+
+    pdfService.doPDF = function () {
+        return $http.get(urlBase);
+    };
+
+    return pdfService;
+}]);
+
+
+app.factory('xlsImportService', ['$http', function ($http) {
+
+    var urlBase = '/api/xls';
+    var xlsImportService = {};
+
+    xlsImportService.doImport = function () {
+        return $http.get(urlBase);
+    };
+
+    return xlsImportService;
+}]);

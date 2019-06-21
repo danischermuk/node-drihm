@@ -22,7 +22,7 @@ exports.postUser = function(req, res) {
   user.username = req.body.username;
   user.password = req.body.password;
   user.email    = req.body.email;
-  user.admin    = req.body.admin;
+  user.role     = req.body.role;
 
   // Save the user and check for errors
   user.save(function(err) {
@@ -49,13 +49,15 @@ exports.updateUser = function(req, res) {
   // Use the Beer model to find a specific beer
   User.findById(req.params.user_id, function(err, user) {
     if (err)
-      res.send(err);
+      res.send("Error - No se encuentra el usuario " +err);
     // Aplicar los cambios
+    console.log ("REQ Body - " + JSON.stringify(req.body));
     user.name     = req.body.name;
     user.username = req.body.username;
     user.password = req.body.password;
     user.email    = req.body.email;
-    user.admin    = req.body.admin;
+    user.role     = req.body.role;
+    console.log("User - " + user);
     // Save the beer and check for errors
     user.save(function(err) {
       if (err)
@@ -83,21 +85,12 @@ exports.getUserMenu = function(req, res) {
     if (err)
       res.send(err);
     else
-      if(user.admin === true)
-      {
         res.send([{  "name": "View Profile",
           "url":  "/profile"}, 
           { 
             "name": "Advanced Settings",
             "url":  "/advsettings"
           }]);
-      }
-      else
-      {
-        res.send( [{  "name": "View Profile", 
-          "url":  "/profile"
-        }]);
-      }
     });
 };
 

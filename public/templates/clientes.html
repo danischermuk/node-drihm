@@ -8,9 +8,9 @@
 	<table ng-table="tableParams" class="table" show-filter="true" id="datatable">
 		<tr ng-repeat="cliente in $data" class="text-center" ng-click=" go('cliente', {cliente_id: cliente.Regis_Cli})">
 
-			<td title="'Regis_Cli'" filter="{ Regis_Cli: 'number'}" sortable="'Regis_Cli'">
+			<td title="'Regis_Cli'" filter="{ Regis_Cli: 'text'}" sortable="'Regis_Cli'">
 				{{cliente.Regis_Cli}}</td>
-			<td title="'Nº Cliente'" filter="{ NumeroCli: 'number'}" sortable="'NumeroCli'">
+			<td title="'Nº Cliente'" filter="{ NumeroCli: 'text'}" sortable="'CodigoCli'">
 				{{cliente.CodigoCli}}</td>
 			<td title="'Razón Social'" filter="{ RazonSocialCli: 'text'}" sortable="'RazonSocialCli'">
 				{{cliente.RazonSocialCli}}</td>

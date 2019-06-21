@@ -1,8 +1,8 @@
 angular.module('RDash')
-.controller('PruebaMLCtrl', ['$state', '$scope', '$location','$mdSidenav', '$timeout', '$http', 'userService', 'sqlService',  'socket', '$mdDialog', '$stateParams', 'NgTableParams',  PruebaMLCtrl]);
+.controller('PruebaMLCtrl', ['$state', '$scope', '$location','$mdSidenav', '$timeout', '$http', 'userService', 'sqlService', 'pdfService',  'socket', '$mdDialog', '$stateParams', 'NgTableParams',  PruebaMLCtrl]);
 
 
-function PruebaMLCtrl($state, $scope, $location, $mdSidenav, $timeout, $http, userService, sqlService, socket,  $mdDialog, $stateParams, NgTableParams) {
+function PruebaMLCtrl($state, $scope, $location, $mdSidenav, $timeout, $http, userService, sqlService, pdfService, socket,  $mdDialog, $stateParams, NgTableParams) {
 	console.log("pruebaML ctrl open");
 
 
@@ -10,7 +10,7 @@ function PruebaMLCtrl($state, $scope, $location, $mdSidenav, $timeout, $http, us
 		count: 100, // initial page size
 		sorting: {fecha_movartid: "asc"}
 	};
-
+  $scope.pdf = "";
 	$scope.query = {};
 	$scope.query.query = "";
     $scope.toolbar.title = "PRUEBA ML - NO TOCAR!!!!!!!!!!!!!";
@@ -41,6 +41,16 @@ function PruebaMLCtrl($state, $scope, $location, $mdSidenav, $timeout, $http, us
           .finally(function() {
             console.log($scope.seller);
           });;
+    };
+
+
+    $scope.doPDF = function () {
+      pdfService.doPDF().then(function (response) {
+        console.log(response.data);
+        $scope.pdf = response.data;
+      }, function (error) {
+        console.log(error);
+      });
     };
 
 }
