@@ -51,6 +51,9 @@ router.route('/sql/products/stock')
 router.route('/sql/products/encamino/:product_id')
 	.get(authController.isAuthenticated, sqlController.sqlQueryProductEnCamino);
 
+router.route('/sql/products/pendientes/:product_id')
+	.get(authController.isAuthenticated, sqlController.sqlQueryProductPendiente);
+
 router.route('/sql/products/prices')
 	.get(authController.isAuthenticated, sqlController.sqlQueryProductsPrices);
 

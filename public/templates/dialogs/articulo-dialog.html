@@ -10,6 +10,9 @@
 			<h4>{{detalle.descripcion}}</h4>
 			<h4>Stock: {{detalle.stock}}</h4>
 			<h4>Último Costo: {{detalle.costo}} ({{detalle.fecha | date:'dd/MM/yyyy'}})</h4>
+			<h4>Tasa IVA: {{detalle.TasaIva}} %</h4>
+			<h4>Posision Arancelaria: {{detalle.PosAran}} {{detalle.DetPosAran}}</h4>
+			<h4>Posision Mercosur:{{detalle.NCMMercosur}} {{detalle.DetNCMMercosur}}</h4>
 			<table ng-table="tableParams" class="table" show-filter="true">
 					<tr ng-repeat="pend in $data" class="text-center">
 						
@@ -19,7 +22,7 @@
 						<td title="'Recibido'">
 							{{pend.recibido}}</td>
 						<td title="'Fecha de Arribo Aproximada'" sortable="'fehcaEntrega'">
-								{{pend.fehcaEntrega | date:'dd/MM/yyyy'}}</td>
+							{{pend.fehcaEntrega | date:'dd/MM/yyyy'}}</td>
 						
 					</tr>
 				</table>

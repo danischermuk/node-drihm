@@ -270,7 +270,7 @@ exports.sqlQueryProductsPrices = async function (req, res) {
 
 
 exports.sqlQueryProductsStock = async function (req, res) {
-	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi, pend.pendiente, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti '
+	var query = 'SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi, pend.pendiente, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.IvaTasa.TasaIva, dbo.PosicionArancelaria.Codigo_PosiAran, dbo.PosicionArancelaria.Descripcion_PosiAran, dbo.ArticuloNomencladorMercosur.Codigo_NcmArti,  dbo.ArticuloNomencladorMercosur.Descripcion_NcmArti '
 		+ 'FROM dbo.Articulo '
 		+ 'LEFT JOIN  (SELECT SUM(OCDet.Cant1_OrdCpDet) AS pendiente, OCDet.Regis_Arti '
 		+ 'FROM dbo.OrdenCompraDet OCDet '
@@ -284,8 +284,11 @@ exports.sqlQueryProductsStock = async function (req, res) {
 		+ 'LEFT JOIN dbo.ArticuloNivelIntegra4 ON dbo.Articulo.Regis_NivelInt4=dbo.ArticuloNivelIntegra4.Regis_NivelInt4 '
 		+ 'LEFT JOIN dbo.ArticuloNivelIntegra5 ON dbo.Articulo.Regis_NivelInt5=dbo.ArticuloNivelIntegra5.Regis_NivelInt5 '
 		+ 'LEFT JOIN dbo.ArticuloStPendiente ON dbo.Articulo.Regis_Arti=dbo.ArticuloStPendiente.Regis_Arti '
+		+ 'LEFT JOIN dbo.IvaTasa ON dbo.Articulo.Regis_TIva=dbo.IvaTasa.Regis_TIva '
+		+ 'LEFT JOIN dbo.PosicionArancelaria ON dbo.Articulo.Regis_PosiAran=dbo.PosicionArancelaria.Regis_PosiAran '
+		+ 'LEFT JOIN dbo.ArticuloNomencladorMercosur ON dbo.Articulo.Regis_NcmArti=dbo.ArticuloNomencladorMercosur.Regis_NcmArti '
 		//+ 'WHERE dbo.Articulo.Regis_Arti BETWEEN 2750 AND 2780 '
-		+ 'ORDER BY CodInternoArti;';
+		+ 'ORDER BY CodInternoArti; ';
 
 	// console.log(query);
 	var data = await module.exports.sqlQuery(query);
@@ -306,6 +309,24 @@ exports.sqlQueryProductEnCamino = async function (req, res) {
 	// console.log(data);
 	res.json({ data });
 };
+
+exports.sqlQueryProductPendiente = async function (req, res) {
+	var productid = req.params.product_id;
+
+	var query = 'SELECT PedDet.Descripcion_PedCliDet as descripcion, PedDet.CanPed1_PedCliDet as cantPedida, PedDet.CanEnt1_PedCliDet as cantEntregada, PedCab.OrdCpra_PedCliCab as ordCompra, PedDet.FecEntrega_PedCliDet as fechaEntrega, dbo.Cliente.RazonSocialCli as nombreCliente  '
+		+ 'FROM dbo.PedidoClteDet PedDet '
+		+ 'LEFT JOIN dbo.PedidoClteCab PedCab ON (PedCab.Regis_PedCliCab=PedDet.Regis_PedCliCab) '
+		+ 'LEFT JOIN dbo.Cliente ON (dbo.Cliente.Regis_Cli=PedCab.Regis_Cli) '
+		+ 'WHERE (NOT ( PedDet.CanPed1_PedCliDet = PedDet.CanEnt1_PedCliDet) AND (Regis_Arti = ' + productid + ')) '
+		;
+
+	// console.log(query);
+	var data = await module.exports.sqlQuery(query);
+	// console.log(data);
+	res.json({ data });
+};
+
+
 
 exports.sqlQueryProductsUtility = async function (req, res) {
 	var query = ' SELECT dbo.Articulo.Regis_Arti, dbo.Articulo.CodInternoArti, dbo.Articulo.PrCto1Mda1_Arti, dbo.Articulo.FechaCosteo_Arti, dbo.Articulo.DescripcionArti, dbo.ArticuloStock.Stock1_StkArti, dbo.ArticuloNivelIntegra1.DescrNivelInt1, dbo.ArticuloNivelIntegra2.DescrNivelInt2, dbo.ArticuloNivelIntegra3.DescrNivelInt3, dbo.ArticuloNivelIntegra4.DescrNivelInt4, dbo.ArticuloNivelIntegra5.DescrNivelInt5 ,dbo.ArticuloStPendiente.StPedido1_StPendi  '

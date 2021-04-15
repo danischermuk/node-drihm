@@ -11,12 +11,20 @@
 					<tr ng-repeat="pend in $data" class="text-center">
 						
 						
-						<td title="'En Camino'">
-								{{pend.pendiente}}</td>
-						<td title="'Recibido'">
-							{{pend.recibido}}</td>
-						<td title="'Fecha de Arribo Aproximada'" sortable="'fehcaEntrega'">
-								{{pend.fehcaEntrega | date:'dd/MM/yyyy'}}</td>
+						<td title="'Cliente'" filter="{ nombreCliente: 'text'}">
+								{{pend.nombreCliente}}</td>
+						<td title="'OC'" filter="{ ordCompra: 'text'}">
+							{{pend.ordCompra}}</td>
+						<td title="'Pendientes'">
+							{{pend.cantPedida - pend.cantEntregada}}</td>
+						<td title="'Descripcion'">
+							{{pend.descripcion}}</td>
+						<td title="'Pedido Original'">
+							{{pend.cantPedida}}</td>
+						<td title="'Entregado'">
+							{{pend.cantEntregada}}</td>
+						<td title="'Fecha de Entrega'" sortable="'fechaEntrega'">
+								{{pend.fechaEntrega | date:'dd/MM/yyyy'}}</td>
 						
 					</tr>
 				</table>

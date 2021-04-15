@@ -1,7 +1,12 @@
 <md-content layout-padding>
 	<md-button ng-click="doQuery()">query</md-button>
 
-	<table ng-table="tableParams" class="table" show-filter="true">
+
+	<md-button ng-click="changeCount()">Mostrar Todo</md-button>
+
+	<a download="download.xls" href="#" onclick="return ngTableExcelExport.excel(this, 'datatable', 'MovimientoEntreFechasValorizado.xls');">Exportar a Excel</a>
+
+	<table ng-table="tableParams" class="table" show-filter="true"  id="datatable">
 		<tr ng-repeat="articulo in $data" class="text-center">
 			
 			
@@ -11,7 +16,7 @@
 
 			<td title="'Stock'" sortable="'Stock1_StkArti'">
 				{{articulo.Stock1_StkArti}}</td>
-			<td title="'Pendientes'" sortable="'StPedido1_StPendi'">
+			<td title="'Pendientes'" sortable="'StPedido1_StPendi'" ng-click="openPendientes(articulo, $event)">
 					{{articulo.StPedido1_StPendi}}</td>
 			<td title="'En camino'" sortable="'pendiente'" ng-click="openEnCamino(articulo, $event)">
 					{{articulo.pendiente}}</td>

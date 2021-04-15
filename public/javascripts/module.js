@@ -156,6 +156,10 @@ app.factory('sqlService', ['$http', function ($http) {
         return $http.get(urlBase + '/products/encamino/' + id );
     };
 
+    sqlService.queryProductPendientes = function (id) {
+        return $http.get(urlBase + '/products/pendientes/' + id );
+    };
+
     sqlService.queryTransaction = function (id) {
         return $http.get(urlBase + '/comprobante/' + id );
     };
