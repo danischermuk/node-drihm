@@ -11,8 +11,8 @@
 			<h4>Stock: {{detalle.stock}}</h4>
 			<h4>Último Costo: {{detalle.costo}} ({{detalle.fecha | date:'dd/MM/yyyy'}})</h4>
 			<h4>Tasa IVA: {{detalle.TasaIva}} %</h4>
-			<h4>Posision Arancelaria: {{detalle.PosAran}} {{detalle.DetPosAran}}</h4>
-			<h4>Posision Mercosur:{{detalle.NCMMercosur}} {{detalle.DetNCMMercosur}}</h4>
+			<h4>Posicion Arancelaria: <a ng-href="https://ci.vuce.gob.ar/busquedaPosicion?posicion={{detalle.PosAran}}&operacion=importacion" target="_blank">  {{detalle.PosAran}} {{detalle.DetPosAran}}</a></h4></h4>
+			<h4>Posicion Mercosur: <a ng-href="https://ci.vuce.gob.ar/busquedaPosicion?posicion={{detalle.NCMMercosur}}&operacion=importacion" target="_blank">  {{detalle.NCMMercosur}} {{detalle.DetNCMMercosur}}</a></h4>
 			<table ng-table="tableParams" class="table" show-filter="true">
 					<tr ng-repeat="pend in $data" class="text-center">
 						
